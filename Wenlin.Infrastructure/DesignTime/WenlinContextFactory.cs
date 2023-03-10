@@ -1,9 +1,8 @@
 ﻿using Wenlin.Domain;
-using Wenlin.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
-namespace Wenlin.API.DesignTime;
+namespace Wenlin.Infrastructure.DesignTime;
 public class WenlinContextFactory : IDesignTimeDbContextFactory<WenlinContext>
 {
     private const string AdminConnectionString = "WENLIN_ADMIN_CONNECTION_STRING";

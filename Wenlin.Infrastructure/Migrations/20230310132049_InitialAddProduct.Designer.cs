@@ -12,7 +12,7 @@ using Wenlin.Domain;
 namespace Wenlin.Infrastructure.Migrations
 {
     [DbContext(typeof(WenlinContext))]
-    [Migration("20230310025238_InitialAddProduct")]
+    [Migration("20230310132049_InitialAddProduct")]
     partial class InitialAddProduct
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

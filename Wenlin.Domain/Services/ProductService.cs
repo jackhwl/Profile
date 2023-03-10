@@ -1,17 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
 using Wenlin.Domain.Entities;
 
 namespace Wenlin.Domain.Services;
-public class ProductService
+public class ProductService : IProductService
 {
     private readonly WenlinContext context;
 	public ProductService(WenlinContext context)
 	{
 		this.context = context;
+	}
+
+	public async Task<IEnumerable<Product>> GetProductsAsync()
+	{
+		return await context.Set<Product>().ToListAsync();
 	}
 
 	public async Task<Product> CreateProduct(string name, string description)

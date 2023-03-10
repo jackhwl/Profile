@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Wenlin.Domain.Entities;
 using Wenlin.SharedKernel.Configuration;
 
 namespace Wenlin.Domain;
@@ -11,7 +10,7 @@ public class WenlinContext : DbContext
         this.modelConfiguration = modelConfiguration;
 	}
 
-	public DbSet<Product> Product { get; set; }
+	//public DbSet<Product> Product { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{

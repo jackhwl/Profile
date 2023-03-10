@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wenlin.Infrastructure", "We
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wenlin.SharedKernel", "Wenlin.SharedKernel\Wenlin.SharedKernel.csproj", "{7074F8E0-6D30-4B76-9F09-C5C9E8FE7288}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wenlin.UnitTest", "Wenlin.UnitTest\Wenlin.UnitTest.csproj", "{376C3EC4-0FC6-4197-AF3D-22BE9B632A6F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{7074F8E0-6D30-4B76-9F09-C5C9E8FE7288}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7074F8E0-6D30-4B76-9F09-C5C9E8FE7288}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7074F8E0-6D30-4B76-9F09-C5C9E8FE7288}.Release|Any CPU.Build.0 = Release|Any CPU
+		{376C3EC4-0FC6-4197-AF3D-22BE9B632A6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{376C3EC4-0FC6-4197-AF3D-22BE9B632A6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{376C3EC4-0FC6-4197-AF3D-22BE9B632A6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{376C3EC4-0FC6-4197-AF3D-22BE9B632A6F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

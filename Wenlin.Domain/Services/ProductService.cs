@@ -18,7 +18,7 @@ public class ProductService : IProductService
 		}
 
 #pragma warning disable CS8603 // Possible null reference return.
-        return await context.Set<Product>().FirstOrDefaultAsync(p => p.ProductGuid == productGuid);
+        return await context.Set<Product>().FirstOrDefaultAsync(p => p.Id == productGuid);
 #pragma warning restore CS8603 // Possible null reference return.
     }
 
@@ -34,7 +34,7 @@ public class ProductService : IProductService
 			throw new ArgumentNullException(nameof(product));
 		}
 
-		product.ProductGuid = Guid.NewGuid();
+		product.Id = Guid.NewGuid();
 
 		await context.Set<Product>().AddAsync(product);
 	}
@@ -46,7 +46,7 @@ public class ProductService : IProductService
             throw new ArgumentNullException(nameof(productGuid));
         }
 
-        return await context.Set<Product>().AnyAsync(p => p.ProductGuid == productGuid);
+        return await context.Set<Product>().AnyAsync(p => p.Id == productGuid);
     }
 
     public void DeleteProduct(Product product)

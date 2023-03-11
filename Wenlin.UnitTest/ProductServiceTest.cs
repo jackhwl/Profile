@@ -31,7 +31,7 @@ public class ProductServiceTest
     string description = "100 Test Street, Testertown, TS 99999"
 )
     {
-        var product = new Product() { Name = name, Description = description, ProductGuid = Guid.NewGuid() };
+        var product = new Product() { Name = name, Description = description, Id = Guid.NewGuid() };
         await productService.AddProductAsync(product);
         return product;
     }

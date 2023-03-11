@@ -34,6 +34,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
+    [HttpHead]
     public async Task<ActionResult<IEnumerable<ProductDto>>> GetProducts()
     {
         var products = await _productService.GetProductsAsync();

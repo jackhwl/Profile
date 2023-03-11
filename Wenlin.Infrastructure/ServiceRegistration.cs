@@ -12,6 +12,7 @@ public static class ServiceRegistration
     {
         services.AddSingleton<IModelConfiguration, SqlModelConfiguration>();
         services.AddScoped<IProductService, ProductService>();
+        services.AddScoped<ICategoryService, CategoryService>();
 
         services.AddDbContext<WenlinContext>(options =>
         {

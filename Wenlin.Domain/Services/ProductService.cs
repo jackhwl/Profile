@@ -10,7 +10,19 @@ public class ProductService : IProductService
 		this.context = context;
 	}
 
-	public async Task<IEnumerable<Product>> GetProductsAsync()
+    public async Task<Product> GetProductAsync(Guid productGuid)
+	{
+		if (productGuid == Guid.Empty)
+		{
+			throw new ArgumentNullException(nameof(productGuid));
+		}
+
+#pragma warning disable CS8603 // Possible null reference return.
+        return await context.Set<Product>().FirstOrDefaultAsync(p => p.ProductGuid == productGuid);
+#pragma warning restore CS8603 // Possible null reference return.
+    }
+
+    public async Task<IEnumerable<Product>> GetProductsAsync()
 	{
 		return await context.Set<Product>().ToListAsync();
 	}

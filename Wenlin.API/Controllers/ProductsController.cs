@@ -19,10 +19,24 @@ public class ProductsController : ControllerBase
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
+    [HttpGet("{productGuid}", Name ="GetProduct")]
+    public async Task<ActionResult<ProductDto>> GetProduct(Guid productGuid)
+    {
+        var product = await _productService.GetProductAsync(productGuid);
+        if (product == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(_mapper.Map<ProductDto>(product));
+    }
+
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ProductDto>>> GetProducts()
     {
         var products = await _productService.GetProductsAsync();
+
         return Ok(_mapper.Map<IEnumerable<ProductDto>>(products));
     }
+
 }

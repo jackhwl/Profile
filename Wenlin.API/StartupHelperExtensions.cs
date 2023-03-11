@@ -17,7 +17,11 @@ internal static class StartupHelperExtensions
         string connectionString = builder.Configuration.GetConnectionString("WenlinConnection");
         builder.Services.AddInfrastructure(connectionString);
 
-        builder.Services.AddControllers();
+        builder.Services.AddControllers(configure =>
+        {
+            configure.ReturnHttpNotAcceptable = true;
+        })
+        .AddXmlDataContractSerializerFormatters();
 
         //// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         //builder.Services.AddEndpointsApiExplorer();

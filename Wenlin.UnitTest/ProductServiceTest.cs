@@ -32,7 +32,7 @@ public class ProductServiceTest
 )
     {
         var product = new Product() { Name = name, Description = description, Id = Guid.NewGuid() };
-        await productService.AddProductAsync(product);
+        await productService.AddProductAsync(Guid.NewGuid(), product);
         return product;
     }
 }

@@ -3,10 +3,10 @@
 namespace Wenlin.Domain.Services;
 public interface IProductService
 {
-    Task<Product> GetProductAsync(Guid productGuid);
-    Task<IEnumerable<Product>> GetProductsAsync();
-    Task AddProductAsync(Product product);
-    Task<bool> ProductExistsAsync(Guid productGuid);
+    Task<Product> GetProductAsync(Guid categoryId, Guid productId);
+    Task<IEnumerable<Product>> GetProductsAsync(Guid categoryId);
+    Task AddProductAsync(Guid categoryId, Product product);
+    Task<bool> CategoryExistsAsync(Guid categoryId);
     void DeleteProduct(Product product);
     Task<bool> SaveAsync();
 }

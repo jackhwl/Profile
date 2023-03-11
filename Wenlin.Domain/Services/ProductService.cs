@@ -27,17 +27,40 @@ public class ProductService : IProductService
 		return await context.Set<Product>().ToListAsync();
 	}
 
-	public async Task<Product> CreateProduct(string name, string description)
+	public async Task AddProductAsync(Product product)
 	{
-		var product = new Product
+		if (product == null)
 		{
-			Name = name,
-			Description = description
-		};
+			throw new ArgumentNullException(nameof(product));
+		}
 
-		await context.AddAsync(product);
-		await context.SaveChangesAsync();
+		product.ProductGuid = Guid.NewGuid();
 
-		return product;
+		await context.Set<Product>().AddAsync(product);
 	}
+
+    public async Task<bool> ProductExistsAsync(Guid productGuid)
+    {
+        if (productGuid == Guid.Empty)
+        {
+            throw new ArgumentNullException(nameof(productGuid));
+        }
+
+        return await context.Set<Product>().AnyAsync(p => p.ProductGuid == productGuid);
+    }
+
+    public void DeleteProduct(Product product)
+    {
+        if (product == null)
+        {
+            throw new ArgumentNullException(nameof(product));
+        }
+
+        context.Set<Product>().Remove(product);
+    }
+
+    public async Task<bool> SaveAsync()
+    {
+        return (await context.SaveChangesAsync() >= 0);
+    }
 }

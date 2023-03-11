@@ -5,5 +5,8 @@ public interface IProductService
 {
     Task<Product> GetProductAsync(Guid productGuid);
     Task<IEnumerable<Product>> GetProductsAsync();
-    Task<Product> CreateProduct(string name, string description);
+    Task AddProductAsync(Product product);
+    Task<bool> ProductExistsAsync(Guid productGuid);
+    void DeleteProduct(Product product);
+    Task<bool> SaveAsync();
 }

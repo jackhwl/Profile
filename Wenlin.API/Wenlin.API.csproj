@@ -8,6 +8,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\**" />
+    <Compile Remove="Profiles\**" />
+    <Content Remove="Models\**" />
+    <Content Remove="Profiles\**" />
+    <EmbeddedResource Remove="Models\**" />
+    <EmbeddedResource Remove="Profiles\**" />
+    <None Remove="Models\**" />
+    <None Remove="Profiles\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Controllers\CategoryController.cs" />
     <Compile Remove="Controllers\ProductController.cs" />
   </ItemGroup>

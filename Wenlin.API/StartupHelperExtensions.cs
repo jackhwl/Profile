@@ -1,4 +1,7 @@
-﻿using Wenlin.Infrastructure;
+﻿using Microsoft.Extensions.Configuration;
+using Wenlin.Application;
+using Wenlin.Infrastructure;
+using Wenlin.Persistence;
 
 namespace Wenlin.API;
 
@@ -15,7 +18,10 @@ internal static class StartupHelperExtensions
 
         // Add services to the container.
         string connectionString = builder.Configuration.GetConnectionString("WenlinConnection");
-        builder.Services.AddInfrastructure(connectionString);
+        var emailSettings = builder.Configuration.GetSection("EmailSettings");
+        builder.Services.AddApplicationServices();
+        builder.Services.AddInfrastructureServices(emailSettings);
+        builder.Services.AddPersistenceServices(connectionString);
 
         builder.Services.AddControllers(configure =>
         {
@@ -27,7 +33,12 @@ internal static class StartupHelperExtensions
         //builder.Services.AddEndpointsApiExplorer();
         //builder.Services.AddSwaggerGen();
 
-        builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        //builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("Open", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+        });
 
         return builder.Build();
     }
@@ -58,6 +69,8 @@ internal static class StartupHelperExtensions
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
+
+        app.UseCors("Open");
 
         app.MapControllers();
 

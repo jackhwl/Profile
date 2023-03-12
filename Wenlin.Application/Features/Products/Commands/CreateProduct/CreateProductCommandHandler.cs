@@ -38,7 +38,7 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
         {
             await _emailService.SendEmail(email);
         }
-        catch (Exception ex)
+        catch
         {
             //_logger.LogError($"Mailing about event {@event.EventId} failed due to an error with the mail service: {ex.Message}");
         }

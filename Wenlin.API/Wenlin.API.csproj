@@ -8,11 +8,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
+    <Compile Remove="Controllers\CategoryController.cs" />
+    <Compile Remove="Controllers\ProductController.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
+    <PackageReference Include="MediatR" Version="12.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Wenlin.Application\Wenlin.Application.csproj" />
     <ProjectReference Include="..\Wenlin.Infrastructure\Wenlin.Infrastructure.csproj" />
+    <ProjectReference Include="..\Wenlin.Persistence\Wenlin.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

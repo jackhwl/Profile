@@ -18,7 +18,7 @@ public class WenlinContextFactory : IDesignTimeDbContextFactory<WenlinContext>
         var options = new DbContextOptionsBuilder<WenlinContext>()
             .UseSqlServer(connectionString, sqlOptions =>
             {
-                sqlOptions.MigrationsAssembly(typeof(ServiceRegistration).Assembly.FullName);
+                sqlOptions.MigrationsAssembly(typeof(InfrastructureServiceRegistration).Assembly.FullName);
             })
             .Options;
         return new WenlinContext(options, new DesignTimeModelConfiguration());

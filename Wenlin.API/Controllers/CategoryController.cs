@@ -1,8 +1,9 @@
-using AutoMapper;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Wenlin.API.Models;
-using Wenlin.Domain.Entities;
-using Wenlin.Domain.Services;
+using Wenlin.Application.Features.Categories.Commands.CreateCategory;
+using Wenlin.Application.Features.Categories.Commands.DeleteCategory;
+using Wenlin.Application.Features.Categories.Queries.GetCategoriesList;
+using Wenlin.Application.Features.Categories.Queries.GetCategoryDetail;
 
 namespace Wenlin.API.Controllers;
 
@@ -10,68 +11,59 @@ namespace Wenlin.API.Controllers;
 [Route("api/categories")]
 public class CategoryController : ControllerBase
 {
-    private readonly ICategoryService _categoryService;
-    private readonly IMapper _mapper;
-
-
-    public CategoryController(ICategoryService categoryService, IMapper mapper)
+    private readonly IMediator _mediator;
+    public CategoryController(IMediator mediator)
     {
-        _categoryService = categoryService ?? throw new ArgumentNullException(nameof(categoryService));
-        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-    }
-
-    [HttpGet("{id}", Name ="GetCategory")]
-    public async Task<ActionResult<CategoryDto>> GetCategory(Guid id)
-    {
-        var category = await _categoryService.GetCategoryAsync(id);
-
-        if (category == null)
-        {
-            return NotFound();
-        }
-
-        return Ok(_mapper.Map<CategoryDto>(category));
+        _mediator = mediator;
     }
 
     [HttpGet]
     [HttpHead]
-    public async Task<ActionResult<IEnumerable<CategoryDto>>> GetCategories()
+    public async Task<ActionResult<List<CategoryListVm>>> GetCategories()
     {
-        var categorys = await _categoryService.GetCategoriesAsync();
-
-        return Ok(_mapper.Map<IEnumerable<CategoryDto>>(categorys));
+        var dtos = await _mediator.Send(new GetCategoriesListQuery());
+        return Ok(dtos);
     }
 
-    [HttpPost]
-    public async Task<ActionResult<CategoryDto>> CreateCategory(CategoryForCreationDto category)
+    [HttpGet("{id}", Name = "GetCategoryById")]
+    public async Task<ActionResult<CategoryDetailVm>> GetCategoryById(Guid id)
     {
-        var categoryEntity = _mapper.Map<Category>(category);
+        var vm = await _mediator.Send(new GetCategoryDetailQuery() { Id = id });
 
-        if (categoryEntity == null)
+        if (vm == null)
         {
-            throw new ArgumentNullException(nameof(categoryEntity));
+            return NotFound();
         }
 
-        await _categoryService.AddCategoryAsync(categoryEntity);
-        await _categoryService.SaveAsync();
+        return Ok(vm);
+    }
 
-        var categoryToReturn = _mapper.Map<CategoryDto>(categoryEntity);
 
-        return CreatedAtRoute("GetCategory", new { id = categoryToReturn.Id }, categoryToReturn);
+    [HttpPost]
+    public async Task<ActionResult<Guid>> CreateCategory(CreateCategoryCommand createCategoryCommand)
+    {
+        var response = await _mediator.Send(createCategoryCommand);
+
+        if (!response.Success)
+        {
+            throw new ArgumentNullException(response.Message);
+        }
+
+        return CreatedAtRoute("GetCategoryById", new { id = response.Category.Id }, response.Category);
     }
 
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteCategory(Guid id)
     {
-        var category = await _categoryService.GetCategoryAsync(id);
+        var response = await _mediator.Send(new DeleteCategoryCommand() { Id = id });
 
-        if (category == null)
+        if (!response.Success)
         {
-            return NotFound();
+            if (response.NotFound)
+                return NotFound();
+            else
+                throw new ArgumentNullException(response.Message);
         }
-
-        _categoryService.DeleteCategory(category);
-        await _categoryService.SaveAsync();
 
         return NoContent();
     }

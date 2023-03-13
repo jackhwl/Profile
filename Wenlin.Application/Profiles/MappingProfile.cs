@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Wenlin.Application.Features.Categories.Commands;
+using Wenlin.Application.Features.Categories.Commands.CreateCategory;
 using Wenlin.Application.Features.Categories.Queries.GetCategoriesList;
 using Wenlin.Application.Features.Categories.Queries.GetCategoriesWithProducts;
 using Wenlin.Application.Features.Categories.Queries.GetCategoryDetail;

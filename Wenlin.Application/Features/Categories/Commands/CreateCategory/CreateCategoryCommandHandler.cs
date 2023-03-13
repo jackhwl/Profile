@@ -3,7 +3,7 @@ using MediatR;
 using Wenlin.Application.Contracts.Persistence;
 using Wenlin.Domain.Entities;
 
-namespace Wenlin.Application.Features.Categories.Commands;
+namespace Wenlin.Application.Features.Categories.Commands.CreateCategory;
 public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommand, CreateCategoryCommandResponse>
 {
     private readonly IAsyncRepository<Category> _categoryRepository;
@@ -26,7 +26,7 @@ public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryComman
         {
             createCategoryCommandResponse.Success = false;
             createCategoryCommandResponse.ValidationErrors = new List<string>();
-            foreach(var error in validationResult.Errors)
+            foreach (var error in validationResult.Errors)
             {
                 createCategoryCommandResponse.ValidationErrors.Add(error.ErrorMessage);
             }

@@ -2,22 +2,26 @@
 {
     public class BaseResponse
     {
-        public BaseResponse() 
-        { 
-            Success = true; 
+        public BaseResponse()
+        {
+            Success = true;
+            NotFound = false;
         }
         public BaseResponse(string message)
         {
             Success = true;
+            NotFound = false;
             Message = message;
         }
-        public BaseResponse(string message, bool success)
+        public BaseResponse(string message, bool success, bool notFound)
         {
-            Success= success;
+            Success = success;
             Message = message;
+            NotFound = notFound;
         }
 
         public bool Success { get; set; }
+        public bool NotFound { get; set; }
         public string Message { get; set; } = string.Empty;
         public List<string>? ValidationErrors { get; set; }
     }

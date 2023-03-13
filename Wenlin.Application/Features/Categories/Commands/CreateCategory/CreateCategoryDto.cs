@@ -1,4 +1,4 @@
-﻿namespace Wenlin.Application.Features.Categories.Commands;
+﻿namespace Wenlin.Application.Features.Categories.Commands.CreateCategory;
 
 public class CreateCategoryDto
 {

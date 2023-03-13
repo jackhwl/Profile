@@ -34,7 +34,7 @@ public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryComman
 
         if (createCategoryCommandResponse.Success)
         {
-            var category = new Category() { Name = request.Name };
+            var category = _mapper.Map<Category>(request);
             category = await _categoryRepository.AddAsync(category);
             createCategoryCommandResponse.Category = _mapper.Map<CreateCategoryDto>(category);
         }

@@ -1,4 +1,5 @@
-﻿using Wenlin.Application.Contracts.Persistence;
+﻿using Microsoft.EntityFrameworkCore;
+using Wenlin.Application.Contracts.Persistence;
 using Wenlin.Domain.Entities;
 
 namespace Wenlin.Persistence.Repositories;
@@ -8,6 +9,14 @@ public class ProductRepository : BaseRepository<Product>, IProductRepository
 	{
 
 	}
+
+    public async Task<Product> GetByIdAsync(Guid categoryId, Guid productId)
+    {
+#pragma warning disable CS8603 // Possible null reference return.
+        return await _dbContext.Set<Product>()
+            .Where(p => p.CategoryId == categoryId && p.Id == productId).FirstOrDefaultAsync();
+#pragma warning restore CS8603 // Possible null reference return.
+    }
 
     public Task<bool> IsProductNameAndDescriptionUnique(string name, string description)
     {

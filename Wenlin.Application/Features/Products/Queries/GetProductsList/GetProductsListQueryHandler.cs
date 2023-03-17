@@ -7,23 +7,42 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Wenlin.Application.Contracts.Persistence;
+using Wenlin.Application.Features.Products.Queries.GetProductDetail;
 using Wenlin.Domain.Entities;
 
 namespace Wenlin.Application.Features.Products.Queries.GetProductsList;
-public class GetProductsListQueryHandler : IRequestHandler<GetProductsListQuery, List<ProductListVm>>
+public class GetProductsListQueryHandler : IRequestHandler<GetProductsListQuery, GetProductsListQueryResponse>
 {
-    private readonly IAsyncRepository<Product> _productRepository;
+    private readonly IProductRepository _productRepository;
+    private readonly IAsyncRepository<Category> _categoryRepository;
+
     private readonly IMapper _mapper;
 
-    public GetProductsListQueryHandler(IMapper mapper, IAsyncRepository<Product> productRepository)
+    public GetProductsListQueryHandler(IMapper mapper, IProductRepository productRepository, IAsyncRepository<Category> categoryRepository)
     {
         _mapper = mapper;
         _productRepository = productRepository;
+        _categoryRepository = categoryRepository;
     }
 
-    public async Task<List<ProductListVm>> Handle(GetProductsListQuery request, CancellationToken cancellationToken)
+    public async Task<GetProductsListQueryResponse> Handle(GetProductsListQuery request, CancellationToken cancellationToken)
     {
-        var allProducts = (await _productRepository.ListAllAsync()).OrderBy(p => p.Name);
-        return _mapper.Map<List<ProductListVm>>(allProducts);
+        var getProductsListQueryResponse = new GetProductsListQueryResponse();
+
+        var category = await _categoryRepository.GetByIdAsync(request.CategoryId);
+
+        if (category == null)
+        {
+            getProductsListQueryResponse.Success = false;
+            getProductsListQueryResponse.NotFound = true;
+
+            return getProductsListQueryResponse;
+        }
+
+        var categoryProducts = (await _productRepository.GetProductsByCategory(category.Id)).OrderBy(p => p.Name);
+
+        getProductsListQueryResponse.ProductListVm = _mapper.Map<List<ProductListVm>>(categoryProducts);
+
+        return getProductsListQueryResponse;
     }
 }

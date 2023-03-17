@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Wenlin.Application.Features.Categories.Queries.GetCategoriesList;
 using Wenlin.Application.Features.Products.Queries.GetProductDetail;
+using Wenlin.Application.Features.Products.Queries.GetProductsList;
 
 namespace Wenlin.API.Controllers;
 
@@ -27,5 +29,20 @@ public class ProductRController : ControllerBase
         }
 
         return Ok(response.ProductDetailVm);
+    }
+
+    [HttpGet]
+    [HttpHead]
+    public async Task<ActionResult<List<ProductListVm>>> GetProducts(Guid categoryId)
+    {
+        var request = new GetProductsListQuery() { CategoryId = categoryId };
+        var response = await _mediator.Send(request);
+
+        if (!response.Success && response.NotFound)
+        {
+            return NotFound();
+        }
+
+        return Ok(response.ProductListVm);
     }
 }

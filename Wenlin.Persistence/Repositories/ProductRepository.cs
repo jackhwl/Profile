@@ -18,6 +18,13 @@ public class ProductRepository : BaseRepository<Product>, IProductRepository
 #pragma warning restore CS8603 // Possible null reference return.
     }
 
+    public async Task<IReadOnlyList<Product>> GetProductsByCategory(Guid categoryId)
+    {
+        var products = await _dbContext.Set<Product>().Where(p => p.CategoryId == categoryId).ToListAsync();
+
+        return products;
+    }
+
     public Task<bool> IsProductNameAndDescriptionUnique(string name, string description)
     {
         var matches = _dbContext.Set<Product>().Any(p => p.Name.Equals(name) && (string.IsNullOrWhiteSpace(p.Description) ? string.IsNullOrWhiteSpace(description) : p.Description.Equals(description)));

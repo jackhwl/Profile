@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Wenlin.Application.Contracts.Infrastructure;
 using Wenlin.Application.Features.Categories.Queries.Vanilla.GetCategoriesList;
+using Wenlin.Application.Features.Categories.Queries.Vanilla.GetCategoryDetail;
 
 namespace Wenlin.API.Controllers;
 
@@ -21,18 +22,18 @@ public class CategoryCQController : ControllerBase
         return Ok(dtos);
     }
 
-    //[HttpGet("{id}", Name = "GetCategoryById")]
-    //public async Task<ActionResult<CategoryDetailVm>> GetCategoryById(Guid id)
-    //{
-    //    var vm = await _mediator.Send(new GetCategoryDetailQuery() { Id = id });
+    [HttpGet("{id}", Name = "GetCQCategoryById")]
+    public async Task<ActionResult<CategoryDetailVm>> GetCategoryById(Guid id)
+    {
+        var vm = await _queryDispatcher.Dispatch<GetCategoryDetailQuery, CategoryDetailVm>(new GetCategoryDetailQuery() { Id = id });
 
-    //    if (vm == null)
-    //    {
-    //        return NotFound();
-    //    }
+        if (vm == null)
+        {
+            return NotFound();
+        }
 
-    //    return Ok(vm);
-    //}
+        return Ok(vm);
+    }
 
 
     //[HttpPost]

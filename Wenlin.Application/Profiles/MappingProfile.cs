@@ -18,6 +18,7 @@ public class MappingProfile : Profile
 
         CreateMap<Category, CategoryDto>();
         CreateMap<Category, CategoryListVm>();
+        CreateMap<Category, Features.Categories.Queries.Vanilla.GetCategoriesList.CategoryListVm>();
         CreateMap<Category, CategoryProductListVm>();
         CreateMap<Category, CategoryDetailVm>();
         CreateMap<Category, CreateCategoryDto>();

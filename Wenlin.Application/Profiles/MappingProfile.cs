@@ -29,6 +29,8 @@ public class MappingProfile : Profile
 
         CreateMap<Category, Features.Categories.Queries.Vanilla.GetCategoriesList.CategoryListVm>();
         CreateMap<Category, Features.Categories.Queries.Vanilla.GetCategoryDetail.CategoryDetailVm>();
+        CreateMap<Category, Features.Categories.Commands.Vanilla.CreateCategory.CreateCategoryDto>();
+        CreateMap<Category, Features.Categories.Commands.Vanilla.CreateCategory.CreateCategoryCommand>().ReverseMap();
 
     }
 }

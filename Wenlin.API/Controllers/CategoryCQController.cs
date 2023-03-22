@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Wenlin.Application.Contracts.Infrastructure;
+using Wenlin.Application.Features.Categories.Commands.Vanilla.CreateCategory;
 using Wenlin.Application.Features.Categories.Queries.Vanilla.GetCategoriesList;
 using Wenlin.Application.Features.Categories.Queries.Vanilla.GetCategoryDetail;
 
@@ -9,9 +10,11 @@ namespace Wenlin.API.Controllers;
 [Route("api/cqrscategories")]
 public class CategoryCQController : ControllerBase
 {
+    private readonly ICommandDispatcher _commandDispatcher;
     private readonly IQueryDispatcher _queryDispatcher;
-    public CategoryCQController(IQueryDispatcher queryDispatcher)
+    public CategoryCQController(ICommandDispatcher commandDispatcher, IQueryDispatcher queryDispatcher)
     {
+        _commandDispatcher = commandDispatcher;
         _queryDispatcher= queryDispatcher;
     }
     [HttpGet]
@@ -36,18 +39,18 @@ public class CategoryCQController : ControllerBase
     }
 
 
-    //[HttpPost]
-    //public async Task<ActionResult<Guid>> CreateCategory(CreateCategoryCommand createCategoryCommand)
-    //{
-    //    var response = await _mediator.Send(createCategoryCommand);
+    [HttpPost]
+    public async Task<ActionResult<Guid>> CreateCategory(CreateCategoryCommand createCategoryCommand)
+    {
+        var response = await _commandDispatcher.Dispatch<CreateCategoryCommand, CreateCategoryCommandResponse>(createCategoryCommand);
 
-    //    if (!response.Success)
-    //    {
-    //        throw new ArgumentNullException(response.Message);
-    //    }
+        if (!response.Success)
+        {
+            throw new ArgumentNullException(response.Message);
+        }
 
-    //    return CreatedAtRoute("GetCategoryById", new { id = response.Category.Id }, response.Category);
-    //}
+        return CreatedAtRoute("GetCQCategoryById", new { id = response.Category.Id }, response.Category);
+    }
 
     //[HttpDelete("{id}")]
     //public async Task<ActionResult> DeleteCategory(Guid id)

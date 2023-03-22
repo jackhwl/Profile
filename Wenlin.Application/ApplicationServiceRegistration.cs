@@ -15,7 +15,7 @@ public static class ApplicationServiceRegistration
             cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly());
         });
 
-        //services.TryAddScoped<ICommandDispatcher, CommandDispatcher>();
+        services.TryAddScoped<ICommandDispatcher, CommandDispatcher>();
         services.AddScoped<IQueryDispatcher, QueryDispatcher>();
         // INFO: Using https://www.nuget.org/packages/Scrutor for registering all Query and Command handlers by convention
         services.Scan(selector =>

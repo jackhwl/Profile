@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Wenlin.Application.Contracts.Infrastructure;
 using Wenlin.Application.Features.Categories.Commands.Vanilla.CreateCategory;
+using Wenlin.Application.Features.Categories.Commands.Vanilla.DeleteCategory;
 using Wenlin.Application.Features.Categories.Queries.Vanilla.GetCategoriesList;
 using Wenlin.Application.Features.Categories.Queries.Vanilla.GetCategoryDetail;
 
@@ -52,19 +53,19 @@ public class CategoryCQController : ControllerBase
         return CreatedAtRoute("GetCQCategoryById", new { id = response.Category.Id }, response.Category);
     }
 
-    //[HttpDelete("{id}")]
-    //public async Task<ActionResult> DeleteCategory(Guid id)
-    //{
-    //    var response = await _mediator.Send(new DeleteCategoryCommand() { Id = id });
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeleteCategory(Guid id)
+    {
+        var response = await _commandDispatcher.Dispatch<DeleteCategoryCommand, DeleteCategoryCommandResponse>(new DeleteCategoryCommand() { Id = id });
 
-    //    if (!response.Success)
-    //    {
-    //        if (response.NotFound)
-    //            return NotFound();
-    //        else
-    //            throw new ArgumentNullException(response.Message);
-    //    }
+        if (!response.Success)
+        {
+            if (response.NotFound)
+                return NotFound();
+            else
+                throw new ArgumentNullException(response.Message);
+        }
 
-    //    return NoContent();
-    //}
+        return NoContent();
+    }
 }

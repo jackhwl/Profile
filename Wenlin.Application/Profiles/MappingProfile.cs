@@ -27,7 +27,9 @@ public class MappingProfile : Profile
         CreateMap<Product, CreateProductCommand>().ReverseMap();
 
 
+
         CreateMap<Category, Features.Categories.Queries.Vanilla.GetCategoriesList.CategoryListVm>();
+        CreateMap<Category, Features.Categories.Queries.Vanilla.GetCategoriesWithProducts.CategoryProductListVm>();
         CreateMap<Category, Features.Categories.Queries.Vanilla.GetCategoryDetail.CategoryDetailVm>();
         CreateMap<Category, Features.Categories.Commands.Vanilla.CreateCategory.CreateCategoryDto>();
         CreateMap<Category, Features.Categories.Commands.Vanilla.CreateCategory.CreateCategoryCommand>().ReverseMap();

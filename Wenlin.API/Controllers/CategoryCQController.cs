@@ -47,7 +47,9 @@ public class CategoryCQController : ControllerBase
 
         if (!response.Success)
         {
-            throw new ArgumentNullException(response.Message);
+            if (response.NotFound) return NotFound();
+
+            throw new ArgumentNullException($"{response.Message};{response.ValidationErrorsString}");
         }
 
         return CreatedAtRoute("GetCQCategoryById", new { id = response.Category.Id }, response.Category);
@@ -60,10 +62,9 @@ public class CategoryCQController : ControllerBase
 
         if (!response.Success)
         {
-            if (response.NotFound)
-                return NotFound();
-            else
-                throw new ArgumentNullException(response.Message);
+            if (response.NotFound) return NotFound();
+
+            throw new ArgumentNullException($"{response.Message};{response.ValidationErrorsString}");
         }
 
         return NoContent();

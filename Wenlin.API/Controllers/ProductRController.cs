@@ -43,9 +43,7 @@ public class ProductRController : ControllerBase
         {
             if (response.NotFound) return NotFound();
 
-            var validationErrors = response.ValidationErrors == null ? "" : string.Join(";", response.ValidationErrors.ToArray());
-
-            throw new ArgumentNullException($"{response.Message};{validationErrors}");
+            throw new ArgumentNullException($"{response.Message};{response.ValidationErrorsString}");
         }
 
         return Ok(response.ProductListVm);
@@ -60,12 +58,9 @@ public class ProductRController : ControllerBase
         {
             if (response.NotFound) return NotFound();
 
-            var validationErrors = response.ValidationErrors == null ? "" : string.Join(";", response.ValidationErrors.ToArray());
-
-            throw new ArgumentNullException($"{response.Message};{validationErrors}");
+            throw new ArgumentNullException($"{response.Message};{response.ValidationErrorsString}");
         }
 
         return CreatedAtRoute("GetProductById", new { categoryId = response.Product.CategoryId, id=response.Product.Id }, response.Product);
     }
-
 }

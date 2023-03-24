@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
-using FluentValidation;
 using MediatR;
-using Wenlin.Application.Contracts.Infrastructure;
 using Wenlin.Application.Contracts.Persistence;
-using Wenlin.Application.Features.Products.Commands.CreateProduct;
 
 namespace Wenlin.Application.Features.Products.Commands.UpdateProduct;
 public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, UpdateProductCommandResponse>

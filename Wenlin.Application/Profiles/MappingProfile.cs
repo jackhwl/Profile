@@ -30,7 +30,7 @@ public class MappingProfile : Profile
 
         CreateMap<Product, CreateProductCommand>().ReverseMap();
         CreateMap<Product, CreateProductDto>();
-        CreateMap<Product, UpdateProductCommand>();
+        CreateMap<Product, UpdateProductCommand>().ReverseMap();
 
 
         CreateMap<Category, Features.Categories.Queries.Vanilla.GetCategoriesList.CategoryListVm>();

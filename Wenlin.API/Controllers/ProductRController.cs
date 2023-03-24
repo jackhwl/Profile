@@ -65,4 +65,21 @@ public class ProductRController : ControllerBase
 
         return CreatedAtRoute("GetProductById", new { categoryId = response.Product.CategoryId, id=response.Product.Id }, response.Product);
     }
+
+    [HttpPut("{productId}")]
+    public async Task<IActionResult> UpdateProductForCategory(Guid categoryId, Guid productId, UpdateProductCommand updateProductCommand)
+    {
+        updateProductCommand.Id = productId;
+        updateProductCommand.CategoryId = categoryId;
+        var response = await _mediator.Send(updateProductCommand);
+
+        if (!response.Success)
+        {
+            if (response.NotFound) return NotFound();
+
+            throw new ArgumentNullException($"{response.Message};{response.ValidationErrorsString}");
+        }
+
+        return NoContent();
+    }
 }

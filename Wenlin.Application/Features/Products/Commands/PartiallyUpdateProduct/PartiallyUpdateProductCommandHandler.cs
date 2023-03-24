@@ -42,6 +42,7 @@ public class PartiallyUpdateProductCommandHandler : IRequestHandler<PartiallyUpd
             //}
 
             var productToAdd = _mapper.Map<Product>(productDto);
+            productToAdd.CategoryId = request.CategoryId;
             productToAdd.Id = request.Id;
 
             var productAdded = await _productRepository.AddAsync(productToAdd);

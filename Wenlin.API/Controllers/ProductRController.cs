@@ -88,7 +88,12 @@ public class ProductRController : ControllerBase
     [HttpPatch("{productId}")]
     public async Task<IActionResult> PartiallyUpdateProductForCategory(Guid categoryId, Guid productId, JsonPatchDocument<ProductForUpdateDto> patchDocument)
     {
-        var partiallyUpdateProductCommand = new PartiallyUpdateProductCommand() { CategoryId = categoryId, Id = productId, PatchDocument = patchDocument };
+        var partiallyUpdateProductCommand = new PartiallyUpdateProductCommand() 
+            { 
+                CategoryId = categoryId, 
+                Id = productId, 
+                PatchDocument = patchDocument 
+            };
         var response = await _mediator.Send(partiallyUpdateProductCommand);
 
         if (!response.Success)

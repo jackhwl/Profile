@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using System.Collections.Generic;
 using Wenlin.Application.Contracts.Persistence;
 using Wenlin.Domain.Entities;
 
@@ -34,13 +35,15 @@ public class CreateCategoryCollectionCommandHandler : IRequestHandler<CreateCate
 
         if (createCategoryCollectionCommandResponse.Success)
         {
-            foreach( var categoryCreateCommandDto in request.CategoryCollection)
+            var categories = new List<CreateCategoryDto>();
+            foreach ( var categoryCreateCommandDto in request.CategoryCollection)
             {
                 var category = _mapper.Map<Category>(categoryCreateCommandDto);
                 category = await _categoryRepository.AddAsync(category);
+                categories.Add(_mapper.Map<CreateCategoryDto>(category));
+                
             }
-
-            //createCategoryCollectionCommandResponse.Category = _mapper.Map<CreateCategoryDto>(category);
+            createCategoryCollectionCommandResponse.Categories = categories;
         }
 
         return createCategoryCollectionCommandResponse;

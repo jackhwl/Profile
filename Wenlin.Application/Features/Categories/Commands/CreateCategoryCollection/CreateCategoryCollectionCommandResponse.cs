@@ -9,5 +9,5 @@ public class CreateCategoryCollectionCommandResponse : BaseResponse
 
     }
 
-    public CreateCategoryDto Category { get; set; } = default!;
+    public IEnumerable<CreateCategoryDto> Categories { get; set; } = default!;
 }

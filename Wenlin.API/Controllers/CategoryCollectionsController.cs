@@ -1,6 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections;
+using Wenlin.API.Helpers;
 using Wenlin.Application.Features.Categories.Commands.CreateCategoryCollection;
+using Wenlin.Application.Features.Categories.Queries.GetCategoryCollection;
 
 namespace Wenlin.API.Controllers;
 
@@ -12,6 +15,13 @@ public class CategoryCollectionsController : ControllerBase
     public CategoryCollectionsController(IMediator mediator)
     {
         _mediator = mediator;
+    }
+
+    [HttpGet("({categoryIds})", Name ="GetCategoryCollection")]
+    public async Task<ActionResult<List<CategoryCollectionVm>>> GetCategoryCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))][FromRoute] IEnumerable<Guid> categoryIds)
+    {
+        var categoryCollectionVm = await _mediator.Send(new GetCategoryCollectionQuery() { CategoryIds = categoryIds});
+        return Ok(categoryCollectionVm);
     }
 
     [HttpPost]
@@ -28,8 +38,9 @@ public class CategoryCollectionsController : ControllerBase
             throw new ArgumentNullException($"{response.Message};{response.ValidationErrorsString}");
         }
 
-        return Ok();
-        //return CreatedAtRoute("GetCategoryById", new { id = response.Category.Id }, response.Category);
+        var categoryIdsAsString = string.Join(",", response.Categories.Select(c => c.Id));
+
+        return CreatedAtRoute("GetCategoryCollection", new {  categoryIds = categoryIdsAsString }, response.Categories);
     }
 
 }

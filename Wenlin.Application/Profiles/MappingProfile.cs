@@ -2,6 +2,7 @@
 using Wenlin.Application.Features.Categories.Commands.CreateCategory;
 using Wenlin.Application.Features.Categories.Queries.GetCategoriesList;
 using Wenlin.Application.Features.Categories.Queries.GetCategoriesWithProducts;
+using Wenlin.Application.Features.Categories.Queries.GetCategoryCollection;
 using Wenlin.Application.Features.Categories.Queries.GetCategoryDetail;
 using Wenlin.Application.Features.Products.Commands.CreateProduct;
 using Wenlin.Application.Features.Products.Queries.GetProductDetail;
@@ -23,7 +24,8 @@ public class MappingProfile : Profile
         CreateMap<Category, CreateCategoryDto>();
         CreateMap<Category, CreateCategoryCommand>().ReverseMap();
         CreateMap<Category, Features.Categories.Commands.CreateCategoryCollection.CreateCategoryCommandDto>().ReverseMap();
-
+        CreateMap<Category, Features.Categories.Commands.CreateCategoryCollection.CreateCategoryDto>();
+        CreateMap<Category, CategoryCollectionVm>(); 
 
         CreateMap<Product, CreateProductCommand>().ReverseMap();
         CreateMap<Product, CreateProductDto>();

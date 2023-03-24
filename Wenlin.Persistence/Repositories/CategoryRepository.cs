@@ -16,4 +16,14 @@ public class CategoryRepository : BaseRepository<Category>, ICategoryRepository
         
         return allCategories;
     }
+
+    public async Task<IEnumerable<Category>> GetCategoriesByIdAsync(IEnumerable<Guid> categoryIds)
+    {
+        if (categoryIds == null)
+        {
+            throw new ArgumentNullException(nameof(categoryIds));
+        }
+
+        return await _dbContext.Set<Category>().Where(c => categoryIds.Contains(c.Id)).ToListAsync();
+    }
 }

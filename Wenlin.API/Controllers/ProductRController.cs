@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Wenlin.Application.Features.Products.Commands.CreateProduct;
+using Wenlin.Application.Features.Products.Commands.UpdateProduct;
 using Wenlin.Application.Features.Products.Queries.GetProductDetail;
 using Wenlin.Application.Features.Products.Queries.GetProductsList;
 using Wenlin.Application.Responses;
@@ -50,8 +51,9 @@ public class ProductRController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<CreateProductDto>> CreateProductForCategory(CreateProductCommand createProductCommand)
+    public async Task<ActionResult<CreateProductDto>> CreateProductForCategory(Guid categoryId, CreateProductCommand createProductCommand)
     {
+        createProductCommand.CategoryId = categoryId;
         var response = await _mediator.Send(createProductCommand);
 
         if (!response.Success)

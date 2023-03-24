@@ -5,6 +5,7 @@ using Wenlin.Application.Features.Categories.Queries.GetCategoriesWithProducts;
 using Wenlin.Application.Features.Categories.Queries.GetCategoryCollection;
 using Wenlin.Application.Features.Categories.Queries.GetCategoryDetail;
 using Wenlin.Application.Features.Products.Commands.CreateProduct;
+using Wenlin.Application.Features.Products.Commands.UpdateProduct;
 using Wenlin.Application.Features.Products.Queries.GetProductDetail;
 using Wenlin.Application.Features.Products.Queries.GetProductsList;
 using Wenlin.Domain.Entities;
@@ -29,6 +30,7 @@ public class MappingProfile : Profile
 
         CreateMap<Product, CreateProductCommand>().ReverseMap();
         CreateMap<Product, CreateProductDto>();
+        CreateMap<Product, UpdateProductCommand>();
 
 
         CreateMap<Category, Features.Categories.Queries.Vanilla.GetCategoriesList.CategoryListVm>();

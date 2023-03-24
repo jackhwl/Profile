@@ -1,6 +1,8 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Wenlin.Application.Features.Products.Commands.CreateProduct;
+using Wenlin.Application.Features.Products.Commands.PartiallyUpdateProduct;
 using Wenlin.Application.Features.Products.Commands.UpdateProduct;
 using Wenlin.Application.Features.Products.Queries.GetProductDetail;
 using Wenlin.Application.Features.Products.Queries.GetProductsList;
@@ -78,6 +80,27 @@ public class ProductRController : ControllerBase
             if (response.NotFound) return NotFound();
 
             throw new ArgumentNullException($"{response.Message};{response.ValidationErrorsString}");
+        }
+
+        return NoContent();
+    }
+
+    [HttpPatch("{productId}")]
+    public async Task<IActionResult> PartiallyUpdateProductForCategory(Guid categoryId, Guid productId, JsonPatchDocument<ProductForUpdateDto> patchDocument)
+    {
+        var partiallyUpdateProductCommand = new PartiallyUpdateProductCommand() { CategoryId = categoryId, Id = productId, PatchDocument = patchDocument };
+        var response = await _mediator.Send(partiallyUpdateProductCommand);
+
+        if (!response.Success)
+        {
+            if (response.NotFound) return NotFound();
+
+            throw new ArgumentNullException($"{response.Message};{response.ValidationErrorsString}");
+        }
+
+        if (response.IsAddProduct)
+        {
+            return CreatedAtRoute("GetProductById", new { categoryId, id = productId }, response.Product);
         }
 
         return NoContent();

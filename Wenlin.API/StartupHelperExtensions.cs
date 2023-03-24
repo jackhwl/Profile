@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json.Serialization;
 using Wenlin.Application;
 using Wenlin.Infrastructure;
 using Wenlin.Persistence;
@@ -26,6 +27,10 @@ internal static class StartupHelperExtensions
         builder.Services.AddControllers(configure =>
         {
             configure.ReturnHttpNotAcceptable = true;
+        })
+        .AddNewtonsoftJson(setupAction =>
+        {
+            setupAction.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
         })
         .AddXmlDataContractSerializerFormatters();
 

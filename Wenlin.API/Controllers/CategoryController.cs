@@ -38,7 +38,6 @@ public class CategoryController : ControllerBase
         return Ok(vm);
     }
 
-
     [HttpPost]
     public async Task<ActionResult<Guid>> CreateCategory(CreateCategoryCommand createCategoryCommand)
     {

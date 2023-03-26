@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json.Serialization;
+﻿using Newtonsoft.Json.Serialization;
 using Wenlin.Application;
 using Wenlin.Infrastructure;
 using Wenlin.Persistence;

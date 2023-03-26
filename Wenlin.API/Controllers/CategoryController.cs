@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Wenlin.Application.Features.Categories.Commands.CreateCategory;
 using Wenlin.Application.Features.Categories.Commands.DeleteCategory;
+using Wenlin.Application.Features.Categories.Commands.UpdateCategory;
 using Wenlin.Application.Features.Categories.Queries.GetCategoriesList;
 using Wenlin.Application.Features.Categories.Queries.GetCategoryDetail;
 
@@ -63,6 +64,28 @@ public class CategoryController : ControllerBase
             if (response.NotFound) return NotFound();
 
             throw new ArgumentNullException($"{response.Message};{response.ValidationErrorsString}");
+        }
+
+        return NoContent();
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateCategory(Guid id, UpdateCategoryCommand updateCategoryCommand)
+    {
+        updateCategoryCommand.Id = id;
+        var response = await _mediator.Send(updateCategoryCommand);
+
+        if (!response.Success)
+        {
+            if (response.NotFound) return NotFound();
+
+            throw new ArgumentNullException($"{response.Message};{response.ValidationErrorsString}");
+        }
+
+        // insert if id not found 
+        if (response.IsAddCategory)
+        {
+            return CreatedAtRoute("GetCategoryById", new { id }, response.Category);
         }
 
         return NoContent();

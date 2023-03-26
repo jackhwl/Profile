@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Wenlin.Application.Features.Categories.Commands.CreateCategory;
+using Wenlin.Application.Features.Categories.Commands.UpdateCategory;
 using Wenlin.Application.Features.Categories.Queries.GetCategoriesList;
 using Wenlin.Application.Features.Categories.Queries.GetCategoriesWithProducts;
 using Wenlin.Application.Features.Categories.Queries.GetCategoryCollection;
@@ -28,6 +29,8 @@ public class MappingProfile : Profile
         CreateMap<Category, Features.Categories.Commands.CreateCategoryCollection.CreateCategoryCommandDto>().ReverseMap();
         CreateMap<Category, Features.Categories.Commands.CreateCategoryCollection.CreateCategoryDto>();
         CreateMap<Category, CategoryCollectionVm>(); 
+        CreateMap<Category, UpdateCategoryCommand>().ReverseMap();
+        CreateMap<Category, CategoryForInsert>();
 
         CreateMap<Product, CreateProductCommand>().ReverseMap();
         CreateMap<Product, CreateProductDto>();

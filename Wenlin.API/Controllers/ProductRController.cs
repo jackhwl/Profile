@@ -82,6 +82,12 @@ public class ProductRController : ControllerBase
             throw new ArgumentNullException($"{response.Message};{response.ValidationErrorsString}");
         }
 
+        // insert if productId not found 
+        if (response.IsAddProduct)
+        {
+            return CreatedAtRoute("GetProductById", new { categoryId, id = productId }, response.Product);
+        }
+
         return NoContent();
     }
 

@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
 using Wenlin.Application.Contracts.Persistence;
+using Wenlin.Application.Features.Products.Commands.PartiallyUpdateProduct;
+using Wenlin.Domain.Entities;
 
 namespace Wenlin.Application.Features.Products.Commands.UpdateProduct;
 public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, UpdateProductCommandResponse>
@@ -32,8 +34,18 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
         var product = await _productRepository.GetByIdAsync(category.Id, request.Id);
         if (product == null)
         {
-            updateProductCommandResponse.Success = false;
-            updateProductCommandResponse.NotFound = true;
+            // insert if product not found
+            var productToAdd = _mapper.Map<Product>(request);
+            productToAdd.Id = request.Id;
+
+            var productAdded = await _productRepository.AddAsync(productToAdd);
+            updateProductCommandResponse.IsAddProduct = true;
+            updateProductCommandResponse.Product = _mapper.Map<ProductForInsert>(productAdded);
+
+
+            // return not found if product is null
+            // updateProductCommandResponse.Success = false;
+            // updateProductCommandResponse.NotFound = true;
 
             return updateProductCommandResponse;
         }

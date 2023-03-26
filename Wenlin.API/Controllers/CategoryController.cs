@@ -68,4 +68,11 @@ public class CategoryController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpOptions]
+    public IActionResult GetCategoriesOptions()
+    {
+        Response.Headers.Add("Allow", "GET,HEAD,POST,DELETE,OPTIONS");
+        return Ok();
+    }
 }

@@ -46,7 +46,7 @@ public class ProductRController : ControllerBase
         {
             if (response.NotFound) return NotFound();
 
-            throw new ArgumentNullException($"{response.Message};{response.ValidationErrorsString}");
+            throw new ArgumentException($"{response.Message};{response.ValidationErrorsString}");
         }
 
         return Ok(response.ProductListVm);
@@ -62,7 +62,7 @@ public class ProductRController : ControllerBase
         {
             if (response.NotFound) return NotFound();
 
-            throw new ArgumentNullException($"{response.Message};{response.ValidationErrorsString}");
+            throw new ArgumentException($"{response.Message};{response.ValidationErrorsString}");
         }
 
         return CreatedAtRoute("GetProductById", new { categoryId = response.Product.CategoryId, id=response.Product.Id }, response.Product);
@@ -79,7 +79,7 @@ public class ProductRController : ControllerBase
         {
             if (response.NotFound) return NotFound();
 
-            throw new ArgumentNullException($"{response.Message};{response.ValidationErrorsString}");
+            throw new ArgumentException($"{response.Message};{response.ValidationErrorsString}");
         }
 
         // insert if productId not found 
@@ -106,7 +106,7 @@ public class ProductRController : ControllerBase
         {
             if (response.NotFound) return NotFound();
 
-            throw new ArgumentNullException($"{response.Message};{response.ValidationErrorsString}");
+            throw new ArgumentException($"{response.Message};{response.ValidationErrorsString}");
         }
 
         if (response.IsAddProduct)

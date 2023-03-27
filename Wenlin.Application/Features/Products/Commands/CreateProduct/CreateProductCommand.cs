@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using System.ComponentModel.DataAnnotations;
 
 namespace Wenlin.Application.Features.Products.Commands.CreateProduct;
 public class CreateProductCommand : IRequest<CreateProductCommandResponse>

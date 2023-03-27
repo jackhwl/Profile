@@ -12,7 +12,7 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
 		RuleFor(p => p.Name)
 			.NotEmpty().WithMessage("{PropertyName} is required.")
 			.NotNull()
-			.MaximumLength(100).WithMessage("{PropertyName} must not exceed 50 characters.");
+			.MaximumLength(100).WithMessage("{PropertyName} must not exceed 100 characters.");
 
 		RuleFor(p => p)
 			.MustAsync(ProductNameAndDescriptionUnique)

@@ -9,20 +9,13 @@ using Wenlin.Application.Features.Products.Commands.PartiallyUpdateProduct;
 using Wenlin.Application.Features.Products.Commands.UpdateProduct;
 using Wenlin.Application.Features.Products.Queries.GetProductDetail;
 using Wenlin.Application.Features.Products.Queries.GetProductsList;
-using Wenlin.Application.Responses;
 
 namespace Wenlin.API.Controllers;
 
-[ApiController]
 [Route("api/categories/{categoryId}/products")]
-public class ProductRController : ControllerBase
+public class ProductRController : BaseController
 {
-    private readonly IMediator _mediator;
-
-    public ProductRController(IMediator mediator)
-    {
-        _mediator= mediator;
-    }
+    public ProductRController(IMediator mediator): base(mediator) { }
 
     [HttpGet("{id}", Name = "GetProductById")]
     public async Task<ActionResult<ProductDetailVm>> GetProductById(Guid categoryId, Guid id)
@@ -105,12 +98,5 @@ public class ProductRController : ControllerBase
         }
 
         return NoContent();
-    }
-
-    public override ActionResult ValidationProblem([ActionResultObjectValue] ModelStateDictionary modelStateDictionary)
-    {
-        var options = HttpContext.RequestServices.GetRequiredService<IOptions<ApiBehaviorOptions>>();
-
-        return (ActionResult)options.Value.InvalidModelStateResponseFactory(ControllerContext);
     }
 }

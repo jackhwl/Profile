@@ -31,7 +31,6 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
         var product = await _productRepository.GetByIdAsync(category.Id, request.ProductForUpdate.Id);
         if (product == null)
         {
-
             // insert if product not found
             var productToAdd = _mapper.Map<Product>(request);
             productToAdd.Id = request.ProductForUpdate.Id;
@@ -46,16 +45,6 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
             return request.Controller.CreatedAtRoute("GetProductById", 
                 new { categoryId = request.ProductForUpdate.CategoryId, id = request.ProductForUpdate.Id }, 
                 _mapper.Map<ProductForInsert>(productAdded));
-
-            //updateProductCommandResponse.IsAddProduct = true;
-            //updateProductCommandResponse.Product = _mapper.Map<ProductForInsert>(productAdded);
-
-
-            // return not found if product is null
-            // updateProductCommandResponse.Success = false;
-            // updateProductCommandResponse.NotFound = true;
-
-            //return request.Controller.NotFound();
         }
 
         var validator = new UpdateProductCommandValidator();

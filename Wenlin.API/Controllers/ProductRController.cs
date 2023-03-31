@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 using Wenlin.Application.Features.Products.Commands.CreateProduct;
+using Wenlin.Application.Features.Products.Commands.DeleteProduct;
 using Wenlin.Application.Features.Products.Commands.PartiallyUpdateProduct;
 using Wenlin.Application.Features.Products.Commands.UpdateProduct;
 using Wenlin.Application.Features.Products.Queries.GetProductDetail;
@@ -99,6 +100,12 @@ public class ProductRController : BaseController
         }
 
         return NoContent();
+    }
+
+    [HttpDelete("{productId}")]
+    public async Task<IActionResult> DeleteProduct(Guid categoryId, Guid productId)
+    {
+        return await _mediator.Send(new DeleteProductCommand(categoryId, productId, this));
     }
 
     [HttpGet("export", Name = "ExportProducts")]

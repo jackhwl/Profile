@@ -43,7 +43,6 @@ public class MappingProfile : Profile
             .ForMember(d => d.ProductId, opt => opt.MapFrom(s => s.Id));
 
 
-
         CreateMap<Category, Features.Categories.Queries.Vanilla.GetCategoriesList.CategoryListVm>();
         CreateMap<Category, Features.Categories.Queries.Vanilla.GetCategoriesWithProducts.CategoryProductListVm>();
         CreateMap<Category, Features.Categories.Queries.Vanilla.GetCategoryDetail.CategoryDetailVm>();

@@ -1,92 +1,115 @@
-using AutoMapper;
+﻿using MediatR;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using Wenlin.API.Models;
-using Wenlin.Domain.Entities;
-using Wenlin.Domain.Services;
+using Wenlin.Application.Features.Products.Commands.CreateProduct;
+using Wenlin.Application.Features.Products.Commands.DeleteProduct;
+using Wenlin.Application.Features.Products.Commands.PartiallyUpdateProduct;
+using Wenlin.Application.Features.Products.Commands.UpdateProduct;
+using Wenlin.Application.Features.Products.Queries.GetProductDetail;
+using Wenlin.Application.Features.Products.Queries.GetProductsExport;
+using Wenlin.Application.Features.Products.Queries.GetProductsList;
 
 namespace Wenlin.API.Controllers;
 
-[ApiController]
 [Route("api/categories/{categoryId}/products")]
-public class ProductController : ControllerBase
+public class ProductController : BaseController
 {
-    private readonly IProductService _productService;
-    private readonly IMapper _mapper;
+    public ProductController(IMediator mediator): base(mediator) { }
 
-
-    public ProductController(IProductService productService, IMapper mapper)
+    [HttpGet("{id}", Name = "GetProductById")]
+    public async Task<ActionResult<ProductDetailVm>> GetProductById(Guid categoryId, Guid id)
     {
-        _productService = productService ?? throw new ArgumentNullException(nameof(productService));
-        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-    }
+        var request = new GetProductDetailQuery() { CategoryId = categoryId, ProductId = id };
+        var response = await _mediator.Send(request);
 
-    [HttpGet("{productId}", Name ="GetProduct")]
-    public async Task<ActionResult<ProductDto>> GetProduct(Guid categoryId, Guid productId)
-    {
-        if (!await _productService.CategoryExistsAsync(categoryId))
-        {
-            return NotFound();
+        if (!response.Success && response.NotFound)
+        { 
+           return NotFound();
         }
 
-        var product = await _productService.GetProductAsync(categoryId, productId);
-
-        if (product == null)
-        {
-            return NotFound();
-        }
-
-        return Ok(_mapper.Map<ProductDto>(product));
+        return Ok(response.ProductDetailVm);
     }
 
     [HttpGet]
     [HttpHead]
-    public async Task<ActionResult<IEnumerable<ProductDto>>> GetProducts(Guid categoryId)
+    public async Task<ActionResult<List<ProductListVm>>> GetProducts(Guid categoryId)
     {
-        if (!await _productService.CategoryExistsAsync(categoryId))
+        var request = new GetProductsListQuery() { CategoryId = categoryId };
+        var response = await _mediator.Send(request);
+
+        if (!response.Success)
         {
-            return NotFound();
+            if (response.NotFound) return NotFound();
+
+            throw new ArgumentException($"{response.Message};{response.ValidationErrorsString}");
         }
 
-        var products = await _productService.GetProductsAsync(categoryId);
-
-        return Ok(_mapper.Map<IEnumerable<ProductDto>>(products));
+        return Ok(response.ProductListVm);
     }
 
     [HttpPost]
-    public async Task<ActionResult<ProductDto>> CreateProductForCategory(Guid categoryId, ProductForCreationDto product)
+    public async Task<ActionResult<CreateProductDto>> CreateProductForCategory(Guid categoryId, CreateProductCommand createProductCommand)
     {
-        if (!await _productService.CategoryExistsAsync(categoryId))
+        createProductCommand.CategoryId = categoryId;
+        var response = await _mediator.Send(createProductCommand);
+
+        if (!response.Success)
         {
-            return NotFound();
+            if (response.NotFound) return NotFound();
+
+            throw new ArgumentException($"{response.Message};{response.ValidationErrorsString}");
         }
 
-        var productEntity = _mapper.Map<Product>(product);
-        await _productService.AddProductAsync(categoryId, productEntity);
-        await _productService.SaveAsync();
+        return CreatedAtRoute("GetProductById", new { categoryId = response.Product.CategoryId, id=response.Product.Id }, response.Product);
+    }
 
-        var productToReturn = _mapper.Map<ProductDto>(productEntity);
+    [HttpPut("{productId}")]
+    public async Task<IActionResult> UpdateProductForCategory(Guid categoryId, Guid productId, ProductForUpdate productForUpdate)
+    {
+        productForUpdate.Id = productId;
+        productForUpdate.CategoryId = categoryId;
+        var updateProductCommand = new UpdateProductCommand(productForUpdate, this);
 
-        return CreatedAtRoute("GetProduct", new { categoryId, productId = productToReturn.Id }, productToReturn);
+        return await _mediator.Send(updateProductCommand);
+    }
+
+    [HttpPatch("{productId}")]
+    public async Task<IActionResult> PartiallyUpdateProductForCategory(Guid categoryId, Guid productId, JsonPatchDocument<ProductForUpdateDto> patchDocument)
+    {
+        var partiallyUpdateProductCommand = new PartiallyUpdateProductCommand() 
+            { 
+                CategoryId = categoryId, 
+                Id = productId, 
+                PatchDocument = patchDocument 
+            };
+        var response = await _mediator.Send(partiallyUpdateProductCommand);
+
+        if (!response.Success)
+        {
+            if (response.NotFound) return NotFound();
+
+            throw new ArgumentException($"{response.Message};{response.ValidationErrorsString}");
+        }
+
+        if (response.IsAddProduct)
+        {
+            return CreatedAtRoute("GetProductById", new { categoryId, id = productId }, response.Product);
+        }
+
+        return NoContent();
     }
 
     [HttpDelete("{productId}")]
-    public async Task<ActionResult> DeleteProduct(Guid categoryId, Guid productId)
+    public async Task<IActionResult> DeleteProduct(Guid categoryId, Guid productId)
     {
-        if (!await _productService.CategoryExistsAsync(categoryId))
-        {
-            return NotFound();
-        }
+        return await _mediator.Send(new DeleteProductCommand(categoryId, productId, this));
+    }
 
-        var product = await _productService.GetProductAsync(categoryId, productId);
+    [HttpGet("export", Name = "ExportProducts")]
+    public async Task<FileResult> ExportProducts()
+    {
+        var fileDto = await _mediator.Send(new GetProductsExportQuery());
 
-        if (product == null)
-        {
-            return NotFound();
-        }
-
-        _productService.DeleteProduct(product);
-        await _productService.SaveAsync();
-
-        return NoContent();
+        return File(fileDto.Data, fileDto.ContentType, fileDto.ProductExportFileName);
     }
 }

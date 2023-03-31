@@ -11,7 +11,7 @@ public class CsvExporter : ICsvExporter
         using (var streamWriter = new StreamWriter(memoryStream))
         {
             using var csvWriter = new CsvWriter(streamWriter);
-            csvWriter.WriteRecord(productExportDtos);
+            csvWriter.WriteRecords(productExportDtos);
         }
 
         return memoryStream.ToArray();

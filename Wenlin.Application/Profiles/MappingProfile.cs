@@ -9,6 +9,7 @@ using Wenlin.Application.Features.Products.Commands.CreateProduct;
 using Wenlin.Application.Features.Products.Commands.PartiallyUpdateProduct;
 using Wenlin.Application.Features.Products.Commands.UpdateProduct;
 using Wenlin.Application.Features.Products.Queries.GetProductDetail;
+using Wenlin.Application.Features.Products.Queries.GetProductsExport;
 using Wenlin.Application.Features.Products.Queries.GetProductsList;
 using Wenlin.Domain.Entities;
 
@@ -38,6 +39,8 @@ public class MappingProfile : Profile
         CreateMap<Product, UpdateProductCommand>().ReverseMap();
         CreateMap<Product, ProductForUpdateDto>().ReverseMap();
         CreateMap<Product, PartiallyUpdateProductCommand>().ReverseMap();
+        CreateMap<Product, ProductExportDto>()
+            .ForMember(d => d.ProductId, opt => opt.MapFrom(s => s.Id));
 
 
 

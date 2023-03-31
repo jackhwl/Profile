@@ -8,6 +8,7 @@ using Wenlin.Application.Features.Products.Commands.CreateProduct;
 using Wenlin.Application.Features.Products.Commands.PartiallyUpdateProduct;
 using Wenlin.Application.Features.Products.Commands.UpdateProduct;
 using Wenlin.Application.Features.Products.Queries.GetProductDetail;
+using Wenlin.Application.Features.Products.Queries.GetProductsExport;
 using Wenlin.Application.Features.Products.Queries.GetProductsList;
 
 namespace Wenlin.API.Controllers;
@@ -98,5 +99,13 @@ public class ProductRController : BaseController
         }
 
         return NoContent();
+    }
+
+    [HttpGet("export", Name = "ExportProducts")]
+    public async Task<FileResult> ExportProducts()
+    {
+        var fileDto = await _mediator.Send(new GetProductsExportQuery());
+
+        return File(fileDto.Data, fileDto.ContentType, fileDto.ProductExportFileName);
     }
 }

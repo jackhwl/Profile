@@ -9,6 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ProductServiceTest.cs" />
+    <Compile Remove="TestModelConfiguration.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="6.10.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.14" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
@@ -24,7 +29,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!--<ProjectReference Include="..\Wenlin.Domain\Wenlin.Domain.csproj" />-->
+    <ProjectReference Include="..\Wenlin.Application\Wenlin.Application.csproj" />
+    <ProjectReference Include="..\Wenlin.Domain\Wenlin.Domain.csproj" />
   </ItemGroup>
 
 </Project>

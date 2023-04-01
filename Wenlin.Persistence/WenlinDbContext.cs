@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Wenlin.SharedKernel.Configuration;
+using Wenlin.Persistence.Configurations;
 
 namespace Wenlin.Persistence;
 public class WenlinDbContext : DbContext

@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Wenlin.Application.Contracts.Persistence;
 using Wenlin.Persistence.Configurations;
 using Wenlin.Persistence.Repositories;
-using Wenlin.SharedKernel.Configuration;
 
 namespace Wenlin.Persistence;
 public static class PersistenceServiceRegistration

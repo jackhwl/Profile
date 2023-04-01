@@ -32,7 +32,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Wenlin.Application\Wenlin.Application.csproj" />
-    <ProjectReference Include="..\Wenlin.Domain\Wenlin.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

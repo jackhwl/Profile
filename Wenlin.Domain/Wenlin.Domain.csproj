@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Wenlin.SharedKernel\Wenlin.SharedKernel.csproj" />
+    <!--<ProjectReference Include="..\Wenlin.SharedKernel\Wenlin.SharedKernel.csproj" />-->
   </ItemGroup>
 
 </Project>

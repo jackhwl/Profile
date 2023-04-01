@@ -33,7 +33,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Wenlin.Application\Wenlin.Application.csproj" />
     <ProjectReference Include="..\Wenlin.Domain\Wenlin.Domain.csproj" />
-    <ProjectReference Include="..\Wenlin.SharedKernel\Wenlin.SharedKernel.csproj" />
+    <!--<ProjectReference Include="..\Wenlin.SharedKernel\Wenlin.SharedKernel.csproj" />-->
   </ItemGroup>
 
   <ItemGroup>

@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Wenlin.Application\Wenlin.Application.csproj" />
+    <ProjectReference Include="..\Wenlin.SharedKernel\Wenlin.SharedKernel.csproj" />
   </ItemGroup>
 
 </Project>

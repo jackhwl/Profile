@@ -8,11 +8,9 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
     public void Configure(EntityTypeBuilder<Product> builder)
     {
         builder
-            .Property(p => p.Name)
-            .IsRequired()
-            .HasMaxLength(100);
+            .ToTable("Product")
+            .Property(p => p.Name);
         builder
-            .Property(p => p.Description)
-            .HasMaxLength(300);
+            .Property(p => p.Description);
     }
 }

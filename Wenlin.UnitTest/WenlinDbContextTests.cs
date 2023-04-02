@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Wenlin.Domain.Entities;
+//using Wenlin.Domain.Entities;
 
 namespace Wenlin.Persistence.IntegrationTest;
 public class WenlinDbContextTests

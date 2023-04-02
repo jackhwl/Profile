@@ -25,6 +25,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API", "API", "{0BA866A8-930
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{46254154-9FD0-4E10-9E14-4EFB37B13773}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wenlin.Application.UnitTest", "Wenlin.Application.UnitTest\Wenlin.Application.UnitTest.csproj", "{8466E953-1101-4091-8206-2B431623B1EA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,10 @@ Global
 		{737A5B8F-B986-4C6E-BF84-7BBF7C2A38E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{737A5B8F-B986-4C6E-BF84-7BBF7C2A38E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{737A5B8F-B986-4C6E-BF84-7BBF7C2A38E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8466E953-1101-4091-8206-2B431623B1EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8466E953-1101-4091-8206-2B431623B1EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8466E953-1101-4091-8206-2B431623B1EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8466E953-1101-4091-8206-2B431623B1EA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -70,6 +76,7 @@ Global
 		{A6C8C184-5DA1-4AA1-8481-41A1A1D4AC3B} = {08C344AB-34A9-4C37-BF50-585DCE59393A}
 		{C2EA0743-5839-4086-B45C-BD61EFFC6A8D} = {08C344AB-34A9-4C37-BF50-585DCE59393A}
 		{737A5B8F-B986-4C6E-BF84-7BBF7C2A38E5} = {BE034696-B96F-4703-A25E-28D3DCC92150}
+		{8466E953-1101-4091-8206-2B431623B1EA} = {46254154-9FD0-4E10-9E14-4EFB37B13773}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C51C9529-86FC-4B21-94B0-B16BD1496B3E}

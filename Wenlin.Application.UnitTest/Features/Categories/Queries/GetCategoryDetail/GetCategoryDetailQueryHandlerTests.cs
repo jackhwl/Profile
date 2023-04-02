@@ -32,4 +32,14 @@ public class GetCategoryDetailQueryHandlerTests
 		result.Id.ShouldBe(new Guid("7A540B5A-76C7-4781-9A6A-2FABFEE6EB7D"));
 		result.Name.ShouldBe("Category A");
 	}
+
+    [Fact]
+    public async Task GetCategoryDetailQueryTestNull()
+    {
+        var handler = new GetCategoryDetailQueryHandler(_mockRepo.Object, _mapper);
+
+        var result = await handler.Handle(new GetCategoryDetailQuery() { Id = new Guid("7A540B5A-76C7-0000-0000-2FABFEE6EB7D") }, CancellationToken.None);
+
+        result.ShouldBeNull();
+    }
 }

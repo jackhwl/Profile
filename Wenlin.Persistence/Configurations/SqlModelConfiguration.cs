@@ -2,7 +2,7 @@
 using Wenlin.SharedKernel.Configuration;
 
 namespace Wenlin.Persistence.Configurations;
-internal class SqlModelConfiguration : IModelConfiguration
+public class SqlModelConfiguration : IModelConfiguration
 {
     public void ConfigureModel(ModelBuilder modelBuilder)
     {

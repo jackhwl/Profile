@@ -15,18 +15,6 @@ public static class InfrastructureServiceRegistration
         services.AddTransient<ICsvExporter, CsvExporter>();
         services.AddTransient<IEmailService, EmailService>();
 
-        //services.AddSingleton<IModelConfiguration, SqlModelConfiguration>();
-        //services.AddScoped<IProductService, ProductService>();
-        //services.AddScoped<ICategoryService, CategoryService>();
-
-        //services.AddDbContext<WenlinContext>(options =>
-        //{
-        //    options.UseSqlServer(connectionString, sqlOptions =>
-        //    {
-        //        sqlOptions.MigrationsAssembly(typeof(InfrastructureServiceRegistration).Assembly.FullName);
-        //    });
-        //});
-
         return services;
     }
 }

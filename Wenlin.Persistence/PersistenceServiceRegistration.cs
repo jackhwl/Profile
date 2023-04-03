@@ -2,8 +2,10 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Wenlin.Application.Contracts.Persistence;
+using Wenlin.Domain;
 using Wenlin.Persistence.Configurations;
 using Wenlin.Persistence.Repositories;
+using Wenlin.SharedKernel.Configuration;
 
 namespace Wenlin.Persistence;
 public static class PersistenceServiceRegistration
@@ -11,7 +13,7 @@ public static class PersistenceServiceRegistration
     public static IServiceCollection AddPersistenceServices(this IServiceCollection services, string connectionString)
     {
         services.AddSingleton<IModelConfiguration, SqlModelConfiguration>();
-        services.AddDbContext<WenlinDbContext>(options => {
+        services.AddDbContext<WenlinContext>(options => {
             options.UseSqlServer(connectionString); //, sqlOptions =>
             //{
             //    sqlOptions.MigrationsAssembly(typeof(PersistenceServiceRegistration).Assembly.FullName);

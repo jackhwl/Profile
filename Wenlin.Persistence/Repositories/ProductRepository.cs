@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Wenlin.Application.Contracts.Persistence;
+using Wenlin.Domain;
 using Wenlin.Domain.Entities;
 
 namespace Wenlin.Persistence.Repositories;
 public class ProductRepository : BaseRepository<Product>, IProductRepository
 {
-	public ProductRepository(WenlinDbContext dbContext) : base(dbContext)
+	public ProductRepository(WenlinContext dbContext) : base(dbContext)
 	{
 
 	}

@@ -1,13 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Wenlin.Application.Contracts.Persistence;
+using Wenlin.Domain;
 
 namespace Wenlin.Persistence.Repositories;
 
 public class BaseRepository<T> : IAsyncRepository<T> where T : class
 {
-    protected readonly WenlinDbContext _dbContext;
+    protected readonly WenlinContext _dbContext;
 
-    public BaseRepository(WenlinDbContext dbContext)
+    public BaseRepository(WenlinContext dbContext)
     {
         _dbContext = dbContext;
     }

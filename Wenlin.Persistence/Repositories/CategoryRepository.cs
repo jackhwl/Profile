@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Wenlin.Application.Contracts.Persistence;
+using Wenlin.Domain;
 using Wenlin.Domain.Entities;
 
 namespace Wenlin.Persistence.Repositories;
 public class CategoryRepository : BaseRepository<Category>, ICategoryRepository
 {
-    public CategoryRepository(WenlinDbContext dbContext) : base(dbContext)
+    public CategoryRepository(WenlinContext dbContext) : base(dbContext)
     {
 
     }

@@ -48,7 +48,7 @@ public class CategoryController : ControllerBase
         {
             if (response.NotFound) return NotFound();
 
-            throw new ArgumentNullException($"{response.Message};{response.ValidationErrorsString}");
+            throw new ArgumentException($"{response.Message};{response.ValidationErrorsString}");
         }
 
         return CreatedAtRoute("GetCategoryById", new { id = response.Category.Id }, response.Category);
@@ -63,7 +63,7 @@ public class CategoryController : ControllerBase
         {
             if (response.NotFound) return NotFound();
 
-            throw new ArgumentNullException($"{response.Message};{response.ValidationErrorsString}");
+            throw new ArgumentException($"{response.Message};{response.ValidationErrorsString}");
         }
 
         return NoContent();
@@ -79,7 +79,7 @@ public class CategoryController : ControllerBase
         {
             if (response.NotFound) return NotFound();
 
-            throw new ArgumentNullException($"{response.Message};{response.ValidationErrorsString}");
+            throw new ArgumentException($"{response.Message};{response.ValidationErrorsString}");
         }
 
         // insert if id not found 

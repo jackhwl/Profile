@@ -1,15 +1,10 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Shouldly;
 using Wenlin.Application.Contracts.Persistence;
 using Wenlin.Application.Features.Categories.Commands.CreateCategory;
 using Wenlin.Application.Profiles;
-using Wenlin.Domain;
 using Wenlin.Domain.Entities;
-using Wenlin.Persistence.Configurations;
 using Wenlin.Persistence.Repositories;
-using Wenlin.SharedKernel.Configuration;
 using Xunit;
 
 namespace Wenlin.Application.UnitTest.Features.Categories.Commands.CreateCategory;
@@ -23,11 +18,7 @@ public class CreateCategoryCommandHandlerTests
         var mapperConfig = new MapperConfiguration(c => { c.AddProfile<MappingProfile>(); });
         _mapper = mapperConfig.CreateMapper();
 
-        var options = new DbContextOptionsBuilder<WenlinContext>()
-            .UseInMemoryDatabase(Guid.NewGuid().ToString())
-            .Options;
-        var context = new WenlinContext(options, new SqlModelConfiguration());
-        _categoryRepository = new CategoryRepository(context);
+        _categoryRepository = new CategoryRepository(DbContextFactory.CreateDbContext());
     }
 
     [Fact]

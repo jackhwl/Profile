@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.Extensions.Logging;
 using Wenlin.Application.Contracts.Infrastructure;
 using Wenlin.Application.Contracts.Persistence;
-using Wenlin.Application.Features.Products.Queries.GetProductDetail;
 using Wenlin.Application.Models.Mail;
 using Wenlin.Domain.Entities;
 

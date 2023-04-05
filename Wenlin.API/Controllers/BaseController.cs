@@ -42,7 +42,12 @@ public abstract class BaseController : ControllerBase
         }
         else
         {
-            throw new ArgumentException($"{response.Message}");
+            var problemDetails = Utils.GetProblemDetails(response.Message, HttpContext.Request.Path);
+
+            return new UnprocessableEntityObjectResult(problemDetails)
+            {
+                ContentTypes = { "application/problem+json" }
+            };
         }
     }
 }

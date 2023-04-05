@@ -19,4 +19,19 @@ internal static class Utils
 
         return validationProblemDetails;
     }
+
+    internal static ProblemDetails GetProblemDetails(string errorMessage, string instance)
+    {
+        var problemDetails = new ProblemDetails();
+
+        // add additional info not added by default
+        problemDetails.Detail = errorMessage;
+        problemDetails.Instance = instance;
+
+        problemDetails.Type = "https://courselibrary.com/modelvalidationproblem";
+        problemDetails.Status = StatusCodes.Status500InternalServerError;
+        problemDetails.Title = "One or more errors occurred.";
+
+        return problemDetails;
+    }
 }

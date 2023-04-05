@@ -1,9 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.WebUtilities;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System.Text;
 using Wenlin.Application;
 using Wenlin.Infrastructure;
 using Wenlin.Persistence;
+using System.Diagnostics;
 
 namespace Wenlin.API;
 
@@ -81,17 +87,56 @@ internal static class StartupHelperExtensions
             //app.UseSwagger();
             //app.UseSwaggerUI();
             app.UseDeveloperExceptionPage();
+            //app.UseExceptionHandler(errorApp =>
+            //{
+            //    errorApp.Run(async context =>
+            //    {
+            //        var errorFeature = context.Features.Get<IExceptionHandlerFeature>();
+            //        var exception = errorFeature.Error;
+
+            //        var problemDetails = new ProblemDetails 
+            //        { 
+            //            Instance = $"urn:myorganization:error:{Guid.NewGuid()}" 
+            //        };
+
+            //        if (exception is BadHttpRequestException badHttpRequestException)
+            //        {
+            //            problemDetails.Title = "Invalid request";
+            //            problemDetails.Status = (int)typeof(BadHttpRequestException).GetProperty("StatusCode", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(badHttpRequestException);
+            //            problemDetails.Detail = badHttpRequestException.Message;
+            //        }
+            //        else
+            //        {
+            //            problemDetails.Title = "An unexpected error occurred!";
+            //            problemDetails.Status = 500;
+            //            problemDetails.Detail = exception.Message;
+            //        }
+
+            //        context.Response.StatusCode = problemDetails.Status.Value;
+            //        context.Response.WriteJson(problemDetails, "application/problem+json");
+            //    });
+            //});
         }
         else
         {
             // logger to DB
-            app.UseExceptionHandler(appBuilder =>
+            app.UseExceptionHandler(errorApp =>
             {
-                appBuilder.Run(async context =>
+                errorApp.Run(async context =>
                 {
-                    context.Response.StatusCode = 500;
+                    var errorFeature = context.Features.Get<IExceptionHandlerFeature>();
+                    //var exception = errorFeature.Error;
 
-                    await context.Response.WriteAsync("An unexpected fault happened. Try again later.");
+                    var problemDetails = new ProblemDetails
+                    {
+                        Title = "An unexpected error occurred!",
+                        Status = 500,
+                        Detail = "An unexpected fault happened. Try again later.",
+                        Instance = context.Request.Path
+                    };
+
+                    context.Response.ContentType = "application/problem+json";
+                    await context.Response.WriteAsJsonAsync(problemDetails);
                 });
             });
         }
@@ -105,5 +150,28 @@ internal static class StartupHelperExtensions
         app.MapControllers();
 
         return app;
+    }
+}
+
+public static class HttpExtensions
+{
+    private static readonly JsonSerializer Serializer = new JsonSerializer
+    {
+        NullValueHandling = NullValueHandling.Ignore
+    };
+
+    public static void WriteJson<T>(this HttpResponse response, T obj, string contentType = "application/json")
+    {
+        response.ContentType = contentType;
+        using (var writer = new HttpResponseStreamWriter(response.Body, Encoding.UTF8))
+        {
+            using (var jsonWriter = new JsonTextWriter(writer))
+            {
+                jsonWriter.CloseOutput = false;
+                jsonWriter.AutoCompleteOnClose = false;
+
+                Serializer.Serialize(jsonWriter, obj);
+            }
+        }
     }
 }

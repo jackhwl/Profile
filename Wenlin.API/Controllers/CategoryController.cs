@@ -50,29 +50,29 @@ public class CategoryController : ControllerBase
             if (response.NotFound) return NotFound();
 
             if (response.ValidationErrors != null)
-            {                // create a validation problem details object
-                //var validationProblemDetails = new ValidationProblemDetails();
-                // https://www.strathweb.com/2018/07/centralized-exception-handling-and-request-validation-in-asp-net-core/
-                var problemDetailsFactory = HttpContext.RequestServices.GetRequiredService<ProblemDetailsFactory>();
+            //{                // create a validation problem details object
+            //    //var validationProblemDetails = new ValidationProblemDetails();
+            //    // https://www.strathweb.com/2018/07/centralized-exception-handling-and-request-validation-in-asp-net-core/
+            //    var problemDetailsFactory = HttpContext.RequestServices.GetRequiredService<ProblemDetailsFactory>();
 
-                var validationProblemDetails = problemDetailsFactory.CreateValidationProblemDetails(HttpContext, ModelState);
+            //    var validationProblemDetails = problemDetailsFactory.CreateValidationProblemDetails(HttpContext, ModelState);
 
-                // add additional info not added by default
-                validationProblemDetails.Detail = "See the errors field for details.";
-                validationProblemDetails.Instance = HttpContext.Request.Path;
+            //    // add additional info not added by default
+            //    validationProblemDetails.Detail = "See the errors field for details.";
+            //    validationProblemDetails.Instance = HttpContext.Request.Path;
 
-                // report invalid model state responses as validation issues
-                validationProblemDetails.Type = "https://courselibrary.com/modelvalidationproblem";
-                validationProblemDetails.Status = StatusCodes.Status422UnprocessableEntity;
-                validationProblemDetails.Title = "One or more validation errors occurred.";
+            //    // report invalid model state responses as validation issues
+            //    validationProblemDetails.Type = "https://courselibrary.com/modelvalidationproblem";
+            //    validationProblemDetails.Status = StatusCodes.Status422UnprocessableEntity;
+            //    validationProblemDetails.Title = "One or more validation errors occurred.";
 
-                return new UnprocessableEntityObjectResult(validationProblemDetails)
-                {
-                    ContentTypes = { "application/problem+json" }
-                };
-            } 
-            else
-                throw new ArgumentException($"{response.Message}");
+            //    return new UnprocessableEntityObjectResult(validationProblemDetails)
+            //    {
+            //        ContentTypes = { "application/problem+json" }
+            //    };
+            //} 
+            //else
+                throw new ArgumentException($"{response.Message};;{response.ValidationErrorsString}");
         }
 
         return CreatedAtRoute("GetCategoryById", new { id = response.Category.Id }, response.Category);

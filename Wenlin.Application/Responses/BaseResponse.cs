@@ -23,7 +23,7 @@
         public bool Success { get; set; }
         public bool NotFound { get; set; }
         public string Message { get; set; } = string.Empty;
-        public List<string>? ValidationErrors { get; set; }
-        public string ValidationErrorsString => ValidationErrors == null ? string.Empty : string.Join(";", ValidationErrors.ToArray());
+        public IDictionary<string, IEnumerable<string>>? ValidationErrors { get; set; }
+        public string ValidationErrorsString => ValidationErrors == null ? string.Empty : string.Join(";", ValidationErrors.Values);
     }
 }

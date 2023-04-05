@@ -25,10 +25,16 @@ public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryComman
         if (validationResult.Errors.Count > 0)
         {
             createCategoryCommandResponse.Success = false;
-            createCategoryCommandResponse.ValidationErrors = new List<string>();
+            createCategoryCommandResponse.ValidationErrors = new Dictionary<string, IEnumerable<string>>();
             foreach (var error in validationResult.Errors)
             {
-                createCategoryCommandResponse.ValidationErrors.Add(error.ErrorMessage);
+                if (createCategoryCommandResponse.ValidationErrors.ContainsKey(error.PropertyName)) { 
+                    var errorMsgs = createCategoryCommandResponse.ValidationErrors[error.PropertyName].ToList();
+                    errorMsgs.Add(error.ErrorMessage);
+                    createCategoryCommandResponse.ValidationErrors[error.PropertyName] = errorMsgs;
+                }
+                else
+                    createCategoryCommandResponse.ValidationErrors.Add(error.PropertyName, new List<string> { error.ErrorMessage });
             }
         }
 

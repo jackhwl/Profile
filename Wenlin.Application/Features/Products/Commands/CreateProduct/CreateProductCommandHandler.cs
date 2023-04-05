@@ -41,10 +41,13 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
         if (validationResult.Errors.Count > 0)
         {
             createProductCommandResponse.Success = false;
-            createProductCommandResponse.ValidationErrors = new List<string>();
+            createProductCommandResponse.ValidationErrors = new Dictionary<string, IEnumerable<string>>();
             foreach (var error in validationResult.Errors)
             {
-                createProductCommandResponse.ValidationErrors.Add(error.ErrorMessage);
+                if (createProductCommandResponse.ValidationErrors.ContainsKey(error.PropertyName))
+                    createProductCommandResponse.ValidationErrors[error.PropertyName].Append(error.ErrorMessage);
+                else
+                    createProductCommandResponse.ValidationErrors.Add(error.PropertyName, new List<string> { error.ErrorMessage });
             }
         }
 

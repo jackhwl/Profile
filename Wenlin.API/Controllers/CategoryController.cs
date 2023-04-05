@@ -1,7 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Wenlin.API.Helpers;
 using Wenlin.Application.Features.Categories.Commands.CreateCategory;
 using Wenlin.Application.Features.Categories.Commands.DeleteCategory;
 using Wenlin.Application.Features.Categories.Commands.UpdateCategory;
@@ -12,13 +10,9 @@ namespace Wenlin.API.Controllers;
 
 [ApiController]
 [Route("api/categories")]
-public class CategoryController : ControllerBase
+public class CategoryController : BaseController
 {
-    private readonly IMediator _mediator;
-    public CategoryController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
+    public CategoryController(IMediator mediator) : base(mediator) { }
 
     [HttpGet]
     [HttpHead]
@@ -46,24 +40,10 @@ public class CategoryController : ControllerBase
     {
         var response = await _mediator.Send(createCategoryCommand);
 
-        if (!response.Success)
-        {
-            if (response.NotFound) return NotFound();
-
-            if (response.ValidationErrors != null)
-            {
-                var validationProblemDetails = Utils.GetValidationProblemDetails(response.ValidationErrors.ToDictionary(err => err.Key, err => err.Value.ToArray()), HttpContext.Request.Path);
-                return new UnprocessableEntityObjectResult(validationProblemDetails)
-                {
-                    ContentTypes = { "application/problem+json" }
-                };
-            }
-        }
+        if (!response.Success) return HandleFail(response);
 
         return CreatedAtRoute("GetCategoryById", new { id = response.Category.Id }, response.Category);
     }
-
-
 
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteCategory(Guid id)

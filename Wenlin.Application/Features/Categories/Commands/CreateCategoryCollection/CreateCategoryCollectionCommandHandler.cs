@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
-using System.Collections.Generic;
 using Wenlin.Application.Contracts.Persistence;
+using Wenlin.Application.Features.Categories.Commands.CreateCategory;
 using Wenlin.Domain.Entities;
 
 namespace Wenlin.Application.Features.Categories.Commands.CreateCategoryCollection;
@@ -20,18 +20,30 @@ public class CreateCategoryCollectionCommandHandler : IRequestHandler<CreateCate
     {
         var createCategoryCollectionCommandResponse = new CreateCategoryCollectionCommandResponse();
 
-        //var validator = new CreateCategoryCollectionCommandValidator();
-        //var validationResult = await validator.ValidateAsync(request);
+        foreach (var categoryCreateCommandDto in request.CategoryCollection)
+        {
+            var validator = new CreateCategoryCommandValidator();
+            var validationResult = await validator.ValidateAsync(_mapper.Map<CreateCategoryCommand>(categoryCreateCommandDto));
 
-        //if (validationResult.Errors.Count > 0)
-        //{
-        //    createCategoryCommandResponse.Success = false;
-        //    createCategoryCommandResponse.ValidationErrors = new List<string>();
-        //    foreach (var error in validationResult.Errors)
-        //    {
-        //        createCategoryCommandResponse.ValidationErrors.Add(error.ErrorMessage);
-        //    }
-        //}
+            if (validationResult.Errors.Count > 0)
+            {
+                if (createCategoryCollectionCommandResponse.Success)
+                    createCategoryCollectionCommandResponse.ValidationErrors = new Dictionary<string, IEnumerable<string>>();
+                createCategoryCollectionCommandResponse.Success = false;
+                
+                foreach (var error in validationResult.Errors)
+                {
+                    if (createCategoryCollectionCommandResponse.ValidationErrors!.ContainsKey(error.PropertyName))
+                    {
+                        var errorMsgs = createCategoryCollectionCommandResponse.ValidationErrors[error.PropertyName].ToList();
+                        errorMsgs.Add(error.ErrorMessage);
+                        createCategoryCollectionCommandResponse.ValidationErrors[error.PropertyName] = errorMsgs;
+                    }
+                    else
+                        createCategoryCollectionCommandResponse.ValidationErrors.Add(error.PropertyName, new List<string> { error.ErrorMessage });
+                }
+            }
+        }
 
         if (createCategoryCollectionCommandResponse.Success)
         {

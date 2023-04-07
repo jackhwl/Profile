@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections;
 using Wenlin.API.Helpers;
 using Wenlin.Application.Features.Categories.Commands.CreateCategoryCollection;
 using Wenlin.Application.Features.Categories.Queries.GetCategoryCollection;
@@ -9,13 +8,9 @@ namespace Wenlin.API.Controllers;
 
 [ApiController]
 [Route("api/categorycollections")]
-public class CategoryCollectionsController : ControllerBase
+public class CategoryCollectionsController : BaseController
 {
-    private readonly IMediator _mediator;
-    public CategoryCollectionsController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
+    public CategoryCollectionsController(IMediator mediator) : base(mediator) { }
 
     [HttpGet("({categoryIds})", Name ="GetCategoryCollection")]
     public async Task<ActionResult<List<CategoryCollectionVm>>> GetCategoryCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))][FromRoute] IEnumerable<Guid> categoryIds)
@@ -31,12 +26,7 @@ public class CategoryCollectionsController : ControllerBase
         createCategoryCollectionCommand.CategoryCollection = categoryCollection;
         var response = await _mediator.Send(createCategoryCollectionCommand);
 
-        if (!response.Success)
-        {
-            if (response.NotFound) return NotFound();
-
-            throw new ArgumentNullException($"{response.Message};{response.ValidationErrorsString}");
-        }
+        if (!response.Success) return HandleFail(response);
 
         var categoryIdsAsString = string.Join(",", response.Categories.Select(c => c.Id));
 

@@ -41,6 +41,7 @@ public class MappingProfile : Profile
         CreateMap<Product, PartiallyUpdateProductCommand>().ReverseMap();
         CreateMap<Product, ProductExportDto>()
             .ForMember(d => d.ProductId, opt => opt.MapFrom(s => s.Id));
+        CreateMap<Features.Categories.Commands.CreateCategoryCollection.CreateCategoryCommandDto, CreateCategoryCommand>();
 
 
         CreateMap<Category, Features.Categories.Queries.Vanilla.GetCategoriesList.CategoryListVm>();

@@ -9,7 +9,6 @@ public class CreateCategoryCommandValidator : AbstractValidator<CreateCategoryCo
         RuleFor(p => p.Name)
             .NotEmpty().WithMessage("{PropertyName} is required.")
             .NotNull()
-            .MinimumLength(150).WithMessage("{PropertyName} must exceed 150 characters.")
             .MaximumLength(80).WithMessage("{PropertyName} must not exceed 80 characters.");
     }
 }

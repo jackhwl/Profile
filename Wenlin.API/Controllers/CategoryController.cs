@@ -19,6 +19,7 @@ public class CategoryController : BaseController
     public async Task<ActionResult<List<CategoryListVm>>> GetCategories()
     {
         var dtos = await _mediator.Send(new GetCategoriesListQuery());
+
         return Ok(dtos);
     }
 
@@ -27,10 +28,7 @@ public class CategoryController : BaseController
     {
         var vm = await _mediator.Send(new GetCategoryDetailQuery() { Id = id });
 
-        if (vm == null)
-        {
-            return NotFound();
-        }
+        if (vm == null) return NotFound();
 
         return Ok(vm);
     }
@@ -50,12 +48,7 @@ public class CategoryController : BaseController
     {
         var response = await _mediator.Send(new DeleteCategoryCommand() { Id = id });
 
-        if (!response.Success)
-        {
-            if (response.NotFound) return NotFound();
-
-            throw new ArgumentException($"{response.Message};{response.ValidationErrorsString}");
-        }
+        if (!response.Success) return HandleFail(response);
 
         return NoContent();
     }

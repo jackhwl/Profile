@@ -28,7 +28,8 @@ public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryComman
             createCategoryCommandResponse.ValidationErrors = new Dictionary<string, IEnumerable<string>>();
             foreach (var error in validationResult.Errors)
             {
-                if (createCategoryCommandResponse.ValidationErrors.ContainsKey(error.PropertyName)) { 
+                if (createCategoryCommandResponse.ValidationErrors.ContainsKey(error.PropertyName)) 
+                { 
                     var errorMsgs = createCategoryCommandResponse.ValidationErrors[error.PropertyName].ToList();
                     errorMsgs.Add(error.ErrorMessage);
                     createCategoryCommandResponse.ValidationErrors[error.PropertyName] = errorMsgs;

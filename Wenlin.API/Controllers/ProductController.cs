@@ -53,12 +53,7 @@ public class ProductController : BaseController
         createProductCommand.CategoryId = categoryId;
         var response = await _mediator.Send(createProductCommand);
 
-        if (!response.Success)
-        {
-            if (response.NotFound) return NotFound();
-
-            throw new ArgumentException($"{response.Message};{response.ValidationErrorsString}");
-        }
+        if (!response.Success) return HandleFail(response);
 
         return CreatedAtRoute("GetProductById", new { categoryId = response.Product.CategoryId, id=response.Product.Id }, response.Product);
     }

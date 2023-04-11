@@ -45,7 +45,11 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
             foreach (var error in validationResult.Errors)
             {
                 if (createProductCommandResponse.ValidationErrors.ContainsKey(error.PropertyName))
-                    createProductCommandResponse.ValidationErrors[error.PropertyName].Append(error.ErrorMessage);
+                {
+                    var errorMsgs = createProductCommandResponse.ValidationErrors[error.PropertyName].ToList();
+                    errorMsgs.Add(error.ErrorMessage);
+                    createProductCommandResponse.ValidationErrors[error.PropertyName] = errorMsgs;
+                }
                 else
                     createProductCommandResponse.ValidationErrors.Add(error.PropertyName, new List<string> { error.ErrorMessage });
             }

@@ -59,12 +59,7 @@ public class CategoryController : BaseController
         updateCategoryCommand.Id = id;
         var response = await _mediator.Send(updateCategoryCommand);
 
-        if (!response.Success)
-        {
-            if (response.NotFound) return NotFound();
-
-            throw new ArgumentException($"{response.Message};{response.ValidationErrorsString}");
-        }
+        if (!response.Success) return HandleFail(response);
 
         // insert if id not found 
         if (response.IsAddCategory)

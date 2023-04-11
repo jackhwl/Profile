@@ -6,12 +6,12 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
     public UpdateProductCommandValidator()
     {
 
-        RuleFor(p => p.ProductForUpdate.Name)
+        RuleFor(p => p.Name)
             .NotEmpty().WithMessage("{PropertyName} is required.")
             .NotNull()
             .MaximumLength(100).WithMessage("{PropertyName} must not exceed 100 characters.");
 
-        RuleFor(p => p.ProductForUpdate.Description)
+        RuleFor(p => p.Description)
            .NotEmpty().WithMessage("{PropertyName} is required.")
            .NotNull()
            .MaximumLength(1000).WithMessage("{PropertyName} must not exceed 1000 characters.");

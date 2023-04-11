@@ -59,13 +59,22 @@ public class ProductController : BaseController
     }
 
     [HttpPut("{productId}")]
-    public async Task<IActionResult> UpdateProductForCategory(Guid categoryId, Guid productId, ProductForUpdate productForUpdate)
+    public async Task<IActionResult> UpdateProductForCategory(Guid categoryId, Guid productId, UpdateProductCommand updateProductCommand)
     {
-        productForUpdate.Id = productId;
-        productForUpdate.CategoryId = categoryId;
-        var updateProductCommand = new UpdateProductCommand(productForUpdate, this);
+        updateProductCommand.Id = productId;
+        updateProductCommand.CategoryId = categoryId;
 
-        return await _mediator.Send(updateProductCommand);
+        var response = await _mediator.Send(updateProductCommand);
+
+        if (!response.Success) return HandleFail(response);
+
+        // insert if id not found 
+        if (response.IsAddProduct)
+        {
+            return CreatedAtRoute("GetProductById", new { categoryId, id = productId }, response.Product);
+        }
+
+        return NoContent();
     }
 
     [HttpPatch("{productId}")]
@@ -97,7 +106,7 @@ public class ProductController : BaseController
     [HttpDelete("{productId}")]
     public async Task<IActionResult> DeleteProduct(Guid categoryId, Guid productId)
     {
-        return await _mediator.Send(new DeleteProductCommand(categoryId, productId, this));
+        return null;//await _mediator.Send(new DeleteProductCommand(categoryId, productId, this));
     }
 
     [HttpGet("export", Name = "ExportProducts")]

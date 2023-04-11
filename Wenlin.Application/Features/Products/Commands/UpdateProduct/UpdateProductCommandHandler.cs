@@ -1,13 +1,10 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Wenlin.Application.Contracts.Persistence;
-using Wenlin.Application.Features.Products.Commands.PartiallyUpdateProduct;
 using Wenlin.Domain.Entities;
 
 namespace Wenlin.Application.Features.Products.Commands.UpdateProduct;
-public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, IActionResult>
+public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, UpdateProductCommandResponse>
 {
     private readonly ICategoryRepository _categoryRepository;
     private readonly IProductRepository _productRepository;
@@ -20,50 +17,54 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
         _mapper = mapper;
     }
 
-    public async Task<IActionResult> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
+    public async Task<UpdateProductCommandResponse> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
-        var category = await _categoryRepository.GetByIdAsync(request.ProductForUpdate.CategoryId);
+        var UpdateProductCommandResponse = new UpdateProductCommandResponse();
+
+        var category = await _categoryRepository.GetByIdAsync(request.CategoryId);
+
         if (category == null)
         {
-            return request.Controller.NotFound();
+            UpdateProductCommandResponse.Success = false;
+            UpdateProductCommandResponse.NotFound = true;
+
+            return UpdateProductCommandResponse;
         }
 
-        var product = await _productRepository.GetByIdAsync(category.Id, request.ProductForUpdate.Id);
+        var product = await _productRepository.GetByIdAsync(category.Id, request.Id);
         if (product == null)
         {
             // insert if product not found
             var productToAdd = _mapper.Map<Product>(request);
-            productToAdd.Id = request.ProductForUpdate.Id;
+            productToAdd.Id = request.Id;
 
-            if (!request.Controller.TryValidateModel(productToAdd))
+            await Utility.ValidateCommand(request, new UpdateProductCommandValidator(), UpdateProductCommandResponse);
+
+            if (UpdateProductCommandResponse.Success)
             {
-                return request.Controller.ValidationProblem(request.Controller.ModelState);
+                var productAdded = await _productRepository.AddAsync(productToAdd);
+
+                UpdateProductCommandResponse.IsAddProduct = true;
+                UpdateProductCommandResponse.Product = _mapper.Map<ProductForInsert>(productAdded);
+
+                // return not found if category is null
+                // UpdateProductCommandResponse.Success = false;
+                // UpdateProductCommandResponse.NotFound = true;
             }
 
-            var productAdded = await _productRepository.AddAsync(productToAdd);
-
-            return request.Controller.CreatedAtRoute("GetProductById", 
-                new { categoryId = request.ProductForUpdate.CategoryId, id = request.ProductForUpdate.Id }, 
-                _mapper.Map<ProductForInsert>(productAdded));
+            return UpdateProductCommandResponse;
         }
 
-        var validator = new UpdateProductCommandValidator();
-        var validationResult = await validator.ValidateAsync(request);
-        
-        foreach (var error in validationResult.Errors)
+        await Utility.ValidateCommand(request, new UpdateProductCommandValidator(), UpdateProductCommandResponse);
+
+        if (UpdateProductCommandResponse.Success)
         {
-            request.Controller.ModelState.AddModelError(error.ErrorCode, error.ErrorMessage);
+            _mapper.Map(request, product);
+            await _productRepository.UpdateAsync(product);
         }
 
-        _mapper.Map(request, product);
-
-            if (!request.Controller.TryValidateModel(product))
-            {
-                return request.Controller.ValidationProblem(request.Controller.ModelState);
-            }
-
-            await _productRepository.UpdateAsync(product);
-
-        return request.Controller.NoContent();
+        return UpdateProductCommandResponse;
     }
+
+
 }

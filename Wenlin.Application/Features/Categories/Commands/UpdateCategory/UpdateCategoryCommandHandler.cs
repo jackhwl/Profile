@@ -27,7 +27,7 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
             var categoryToAdd = _mapper.Map<Category>(request);
             categoryToAdd.Id = request.Id;
 
-            await ValidateUpdateCommand(request, updateCategoryCommandResponse);
+            await Utility.ValidateCommand(request, new UpdateCategoryCommandValidator(), updateCategoryCommandResponse);
 
             if (updateCategoryCommandResponse.Success)
             {
@@ -44,7 +44,7 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
             return updateCategoryCommandResponse;
         }
 
-        await ValidateUpdateCommand(request, updateCategoryCommandResponse);
+        await Utility.ValidateCommand(request, new UpdateCategoryCommandValidator(), updateCategoryCommandResponse);
 
         if (updateCategoryCommandResponse.Success)
         {
@@ -53,28 +53,5 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
         }
 
         return updateCategoryCommandResponse;
-    }
-
-    private static async Task ValidateUpdateCommand(UpdateCategoryCommand request, UpdateCategoryCommandResponse updateCategoryCommandResponse)
-    {
-        var validator = new UpdateCategoryCommandValidator();
-        var validationResult = await validator.ValidateAsync(request);
-
-        if (validationResult.Errors.Count > 0)
-        {
-            updateCategoryCommandResponse.Success = false;
-            updateCategoryCommandResponse.ValidationErrors = new Dictionary<string, IEnumerable<string>>();
-            foreach (var error in validationResult.Errors)
-            {
-                if (updateCategoryCommandResponse.ValidationErrors.ContainsKey(error.PropertyName))
-                {
-                    var errorMsgs = updateCategoryCommandResponse.ValidationErrors[error.PropertyName].ToList();
-                    errorMsgs.Add(error.ErrorMessage);
-                    updateCategoryCommandResponse.ValidationErrors[error.PropertyName] = errorMsgs;
-                }
-                else
-                    updateCategoryCommandResponse.ValidationErrors.Add(error.PropertyName, new List<string> { error.ErrorMessage });
-            }
-        }
     }
 }

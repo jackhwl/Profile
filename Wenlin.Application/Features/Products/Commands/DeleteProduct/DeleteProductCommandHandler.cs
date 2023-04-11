@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Wenlin.Application.Contracts.Persistence;
 
 namespace Wenlin.Application.Features.Products.Commands.DeleteProduct;
-public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand, IActionResult>
+public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand, DeleteProductCommandResponse>
 {
     private readonly ICategoryRepository _categoryRepository;
     private readonly IProductRepository _productRepository;
@@ -17,22 +16,29 @@ public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand,
         _mapper = mapper;
     }
 
-    public async Task<IActionResult> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
+    public async Task<DeleteProductCommandResponse> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
     {
+        var deleteProductCommandResponse = new DeleteProductCommandResponse();
+
         var category = await _categoryRepository.GetByIdAsync(request.CategoryId);
         if (category == null)
         {
-            return request.Controller.NotFound();
+            deleteProductCommandResponse.Success = false;
+            deleteProductCommandResponse.NotFound = true;
+
+            return deleteProductCommandResponse;
         }
 
-        var product = await _productRepository.GetByIdAsync(category.Id, request.ProductId);
+        var product = await _productRepository.GetByIdAsync(request.CategoryId, request.ProductId);
+
         if (product == null)
         {
-            return request.Controller.NotFound();
+            deleteProductCommandResponse.Success = false;
+            deleteProductCommandResponse.NotFound = true;
         }
+        else
+            await _productRepository.DeleteAsync(product);
 
-        await _productRepository.DeleteAsync(product);
-
-        return request.Controller.NoContent();
+        return deleteProductCommandResponse;
     }
 }

@@ -106,7 +106,11 @@ public class ProductController : BaseController
     [HttpDelete("{productId}")]
     public async Task<IActionResult> DeleteProduct(Guid categoryId, Guid productId)
     {
-        return null;//await _mediator.Send(new DeleteProductCommand(categoryId, productId, this));
+        var response = await _mediator.Send(new DeleteProductCommand(){ CategoryId = categoryId, ProductId = productId });
+
+        if (!response.Success) return HandleFail(response);
+
+        return NoContent();
     }
 
     [HttpGet("export", Name = "ExportProducts")]

@@ -25,7 +25,7 @@ public static class MockCategoryRepository
         var mockRepo = new Mock<ICategoryRepository>();
 
         mockRepo.Setup(r => r.ListAllAsync()).ReturnsAsync(categories);
-        mockRepo.Setup(r => r.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync((Guid id) => categories.FirstOrDefault(c => c.Id == id));
+        //mockRepo.Setup(r => r.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync((Guid id) => categories.FirstOrDefault(c => c.Id == id));
 
         return mockRepo;
     }

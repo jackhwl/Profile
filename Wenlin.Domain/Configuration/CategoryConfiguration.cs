@@ -9,6 +9,7 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
     {
         builder
             .Property(p => p.Name)
+            .IsRequired()
             .HasMaxLength(80);
         builder
             .Property(p => p.Description)

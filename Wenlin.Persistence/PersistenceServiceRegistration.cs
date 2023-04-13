@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 using Wenlin.Application.Contracts.Persistence;
 using Wenlin.Domain;
 using Wenlin.Persistence.Configurations;
@@ -21,9 +22,21 @@ public static class PersistenceServiceRegistration
 
         services.AddScoped(typeof(IAsyncRepository<>), typeof(BaseRepository<>));
 
-        services.AddScoped<IProductRepository, ProductRepository>();
-        services.AddScoped<ICategoryRepository, CategoryRepository>();
-        services.AddScoped<ICustomerRepository, CustomerRepository>();
+        var repositoryTypes = Assembly.GetAssembly(typeof(BaseRepository<>))?.GetTypes()
+            .Where(type => !type.IsAbstract && type.Name.EndsWith("Repository"));
+
+        foreach (var repositoryType in repositoryTypes!)
+        {
+            var interfaceType = repositoryType.GetInterfaces()
+                .FirstOrDefault(i => !i.IsGenericType);
+
+            if (interfaceType == null)
+            {
+                throw new InvalidOperationException($"Repository {repositoryType.Name} must implement an interface other than IAsyncRepository.");
+            }
+
+            services.AddScoped(interfaceType, repositoryType);
+        }
 
         return services;
     }

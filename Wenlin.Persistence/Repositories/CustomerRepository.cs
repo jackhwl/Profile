@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Wenlin.Application.Contracts.Persistence;
 using Wenlin.Application.Features.Customers.Queries.GetCustomersList;
+using Wenlin.Application.Helpers;
 using Wenlin.Domain;
 using Wenlin.Domain.Entities;
 
@@ -11,17 +12,17 @@ public class CustomerRepository : BaseRepository<Customer>, ICustomerRepository
     {
 
     }
-    public async Task<IEnumerable<Customer>> GetCustomersAsync(CustomersResourceParameters customersResourceParameters)
+    public async Task<PagedList<Customer>> GetCustomersAsync(CustomersResourceParameters customersResourceParameters)
     {
         if (customersResourceParameters == null)
         {
             throw new ArgumentNullException(nameof(customersResourceParameters));
         }
 
-        if (string.IsNullOrWhiteSpace(customersResourceParameters.MainCategory) && string.IsNullOrWhiteSpace(customersResourceParameters.SearchQuery))
-        {
-            return await ListAllAsync();
-        }
+        //if (string.IsNullOrWhiteSpace(customersResourceParameters.MainCategory) && string.IsNullOrWhiteSpace(customersResourceParameters.SearchQuery))
+        //{
+        //    return await ListAllAsync();
+        //}
 
         // collection to start from
         var collection = _dbContext.Set<Customer>() as IQueryable<Customer>;
@@ -38,6 +39,9 @@ public class CustomerRepository : BaseRepository<Customer>, ICustomerRepository
             collection = collection.Where(a => a.MainCategory.Contains(searchQuery) || a.FirstName.Contains(searchQuery) || a.LastName.Contains(searchQuery));
         }
 
-        return await collection.ToListAsync();
+        var pageSize = customersResourceParameters.PageSize;
+        var pageNumber = customersResourceParameters.PageNumber;
+
+        return await PagedList<Customer>.CreateAsync(collection, pageNumber, pageSize);
     }
 }

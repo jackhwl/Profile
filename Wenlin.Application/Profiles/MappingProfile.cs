@@ -12,6 +12,7 @@ using Wenlin.Application.Features.Products.Commands.UpdateProduct;
 using Wenlin.Application.Features.Products.Queries.GetProductDetail;
 using Wenlin.Application.Features.Products.Queries.GetProductsExport;
 using Wenlin.Application.Features.Products.Queries.GetProductsList;
+using Wenlin.Application.Helpers;
 using Wenlin.Domain.Entities;
 
 namespace Wenlin.Application.Profiles;
@@ -51,7 +52,9 @@ public class MappingProfile : Profile
         CreateMap<Category, Features.Categories.Commands.Vanilla.CreateCategory.CreateCategoryDto>();
         CreateMap<Category, Features.Categories.Commands.Vanilla.CreateCategory.CreateCategoryCommand>().ReverseMap();
 
-        CreateMap<Customer, CustomerListDto>().ReverseMap();
+        CreateMap<Customer, CustomerListDto>()
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"))
+            .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.GetCurrentAge()));
 
     }
 }

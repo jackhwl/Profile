@@ -1,4 +1,5 @@
 ﻿using Wenlin.Application.Features.Products.Queries.GetProductsList;
+using Wenlin.Application.Helpers;
 using Wenlin.Application.Responses;
 
 namespace Wenlin.Application.Features.Customers.Queries.GetCustomersList;
@@ -8,5 +9,5 @@ public class GetCustomersListQueryResponse : BaseResponse
     {
 
 	}
-    public List<CustomerListDto> CustomerListDto { get; set; } = default!;
+    public PagedList<CustomerListDto> CustomerListDto { get; set; } = default!;
 }

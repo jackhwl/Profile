@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Wenlin.Application.Contracts.Persistence;
+using Wenlin.Application.Helpers;
 using Wenlin.Domain.Entities;
 
 namespace Wenlin.Application.Features.Products.Commands.UpdateProduct;

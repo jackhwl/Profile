@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Wenlin.Application.Contracts.Persistence;
+using Wenlin.Application.Helpers;
 
 namespace Wenlin.Application.Features.Customers.Queries.GetCustomersList;
 internal class GetCustomersListQueryHandler : IRequestHandler<GetCustomersListQuery, GetCustomersListQueryResponse>
@@ -18,9 +19,9 @@ internal class GetCustomersListQueryHandler : IRequestHandler<GetCustomersListQu
     {
         var getCustomersListQueryResponse = new GetCustomersListQueryResponse();
 
-        var customers = (await _customerRepository.GetCustomersAsync(request.CustomersResourceParameters)).ToList();
+        var customers = await _customerRepository.GetCustomersAsync(request.CustomersResourceParameters);
 
-        getCustomersListQueryResponse.CustomerListDto = _mapper.Map<List<CustomerListDto>>(customers);
+        getCustomersListQueryResponse.CustomerListDto = new PagedList<CustomerListDto>(_mapper.Map<List<CustomerListDto>>(customers), customers.TotalCount, customers.CurrentPage, customers.PageSize) ;
 
         return getCustomersListQueryResponse;
     }

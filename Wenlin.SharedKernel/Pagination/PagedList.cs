@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Wenlin.Application.Helpers;
+namespace Wenlin.SharedKernel.Pagination;
 public class PagedList<T> : List<T>
 {
     public int CurrentPage { get; private set; }

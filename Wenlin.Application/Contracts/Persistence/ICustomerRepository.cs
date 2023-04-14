@@ -1,6 +1,6 @@
 ﻿using Wenlin.Application.Features.Customers.Queries.GetCustomersList;
-using Wenlin.Application.Helpers;
 using Wenlin.Domain.Entities;
+using Wenlin.SharedKernel.Pagination;
 
 namespace Wenlin.Application.Contracts.Persistence;
 public interface ICustomerRepository : IAsyncRepository<Customer>

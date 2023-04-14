@@ -1,6 +1,5 @@
-﻿using Wenlin.Application.Features.Products.Queries.GetProductsList;
-using Wenlin.Application.Helpers;
-using Wenlin.Application.Responses;
+﻿using Wenlin.Application.Responses;
+using Wenlin.SharedKernel.Pagination;
 
 namespace Wenlin.Application.Features.Customers.Queries.GetCustomersList;
 public class GetCustomersListQueryResponse : BaseResponse

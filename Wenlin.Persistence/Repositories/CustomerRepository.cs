@@ -1,9 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Wenlin.Application.Contracts.Persistence;
+﻿using Wenlin.Application.Contracts.Persistence;
 using Wenlin.Application.Features.Customers.Queries.GetCustomersList;
-using Wenlin.Application.Helpers;
 using Wenlin.Domain;
 using Wenlin.Domain.Entities;
+using Wenlin.SharedKernel.Pagination;
 
 namespace Wenlin.Persistence.Repositories;
 public class CustomerRepository : BaseRepository<Customer>, ICustomerRepository

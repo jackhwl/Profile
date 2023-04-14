@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Wenlin.Application.Contracts.Persistence;
-using Wenlin.Application.Helpers;
+using Wenlin.SharedKernel.Pagination;
 
 namespace Wenlin.Application.Features.Customers.Queries.GetCustomersList;
 internal class GetCustomersListQueryHandler : IRequestHandler<GetCustomersListQuery, GetCustomersListQueryResponse>

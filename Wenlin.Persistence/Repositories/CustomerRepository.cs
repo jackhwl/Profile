@@ -1,16 +1,20 @@
-﻿using Wenlin.Application.Contracts.Persistence;
+﻿using Wenlin.Application.Contracts.Infrastructure;
+using Wenlin.Application.Contracts.Persistence;
 using Wenlin.Application.Features.Customers.Queries.GetCustomersList;
 using Wenlin.Domain;
 using Wenlin.Domain.Entities;
 using Wenlin.SharedKernel.Pagination;
+using Wenlin.SharedKernel.PropertyMapping;
 
 namespace Wenlin.Persistence.Repositories;
 public class CustomerRepository : BaseRepository<Customer>, ICustomerRepository
 {
-    public CustomerRepository(WenlinContext dbContext) : base(dbContext)
+    private readonly IPropertyMappingService _propertyMappingService;
+    public CustomerRepository(WenlinContext dbContext, IPropertyMappingService propertyMappingService) : base(dbContext)
     {
-
+        _propertyMappingService= propertyMappingService ?? throw new ArgumentNullException(nameof(propertyMappingService));
     }
+
     public async Task<PagedList<Customer>> GetCustomersAsync(CustomersResourceParameters customersResourceParameters)
     {
         if (customersResourceParameters == null)
@@ -36,6 +40,14 @@ public class CustomerRepository : BaseRepository<Customer>, ICustomerRepository
         {
             var searchQuery = customersResourceParameters.SearchQuery.Trim();
             collection = collection.Where(a => a.MainCategory.Contains(searchQuery) || a.FirstName.Contains(searchQuery) || a.LastName.Contains(searchQuery));
+        }
+
+        if (!string.IsNullOrWhiteSpace(customersResourceParameters.OrderBy))
+        {
+            // get property mapping dictionary
+            var customerPropertyMappingDictionary = _propertyMappingService.GetPropertyMapping<CustomerListDto, Customer>();
+
+            collection = collection.ApplySort(customersResourceParameters.OrderBy, customerPropertyMappingDictionary);
         }
 
         var pageSize = customersResourceParameters.PageSize;

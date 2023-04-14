@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using Wenlin.Application.Contracts.Infrastructure;
 using Wenlin.Application.Contracts.Persistence;
 using Wenlin.Domain;
 using Wenlin.Persistence.Configurations;

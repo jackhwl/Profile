@@ -4,6 +4,7 @@ using Wenlin.Infrastructure.Mail;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Wenlin.Infrastructure.FileExport;
+using Wenlin.Infrastructure.PropertyMapping;
 
 namespace Wenlin.Infrastructure;
 public static class InfrastructureServiceRegistration
@@ -14,6 +15,7 @@ public static class InfrastructureServiceRegistration
 
         services.AddTransient<ICsvExporter, CsvExporter>();
         services.AddTransient<IEmailService, EmailService>();
+        services.AddTransient<IPropertyMappingService, PropertyMappingService>();
 
         return services;
     }

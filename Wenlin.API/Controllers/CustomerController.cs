@@ -47,6 +47,7 @@ public class CustomerController : BaseController
             case ResourceUriType.PreviousPage:
                 return Url.Link(nameof(GetCustomers), new
                 {
+                    orderBy= customersResourceParameters.OrderBy,
                     pageNumber = customersResourceParameters.PageNumber - 1,
                     pageSize = customersResourceParameters.PageSize,
                     mainCategory = customersResourceParameters.MainCategory,
@@ -55,6 +56,7 @@ public class CustomerController : BaseController
             case ResourceUriType.NextPage:
                 return Url.Link(nameof(GetCustomers), new
                 {
+                    orderBy = customersResourceParameters.OrderBy,
                     pageNumber = customersResourceParameters.PageNumber + 1,
                     pageSize = customersResourceParameters.PageSize,
                     mainCategory = customersResourceParameters.MainCategory,
@@ -63,6 +65,7 @@ public class CustomerController : BaseController
             default:
                 return Url.Link(nameof(GetCustomers), new
                 {
+                    orderBy = customersResourceParameters.OrderBy,
                     pageNumber = customersResourceParameters.PageNumber,
                     pageSize = customersResourceParameters.PageSize,
                     mainCategory = customersResourceParameters.MainCategory,

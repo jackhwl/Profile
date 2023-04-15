@@ -19,6 +19,8 @@ public class CustomerController : BaseController
         var request = new GetCustomersListQuery() { CustomersResourceParameters = customersResourceParameters };
         var response = await _mediator.Send(request);
 
+        if (!response.Success) return HandleFail(response);
+
         var customers = response.CustomerListDto;
 
         var previousPageLink = customers.HasPrevious ? CreateCustomersResourceUri(customersResourceParameters, ResourceUriType.PreviousPage) : null;

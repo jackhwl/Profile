@@ -1,4 +1,5 @@
-﻿using Wenlin.Application.Responses;
+﻿using System.Dynamic;
+using Wenlin.Application.Responses;
 using Wenlin.SharedKernel.Pagination;
 
 namespace Wenlin.Application.Features.Customers.Queries.GetCustomersList;
@@ -9,4 +10,5 @@ public class GetCustomersListQueryResponse : BaseResponse
 
 	}
     public PagedList<CustomerListDto> CustomerListDto { get; set; } = default!;
+    public IEnumerable<ExpandoObject> CustomerExpandoListDto { get; set; } = default!;
 }

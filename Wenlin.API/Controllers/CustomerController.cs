@@ -14,7 +14,7 @@ public class CustomerController : BaseController
 
     [HttpGet(Name = nameof(GetCustomers))]
     [HttpHead]
-    public async Task<ActionResult<IEnumerable<CustomerListDto>>> GetCustomers([FromQuery]CustomersResourceParameters customersResourceParameters)
+    public async Task<ActionResult> GetCustomers([FromQuery]CustomersResourceParameters customersResourceParameters)
     {
         var request = new GetCustomersListQuery() { CustomersResourceParameters = customersResourceParameters };
         var response = await _mediator.Send(request);
@@ -39,7 +39,7 @@ public class CustomerController : BaseController
 
         Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
 
-        return Ok(response.CustomerListDto);
+        return Ok(response.CustomerExpandoListDto);
     }
 
     private string? CreateCustomersResourceUri(CustomersResourceParameters customersResourceParameters, ResourceUriType type)
@@ -49,6 +49,7 @@ public class CustomerController : BaseController
             case ResourceUriType.PreviousPage:
                 return Url.Link(nameof(GetCustomers), new
                 {
+                    fields = customersResourceParameters.Fields,
                     orderBy= customersResourceParameters.OrderBy,
                     pageNumber = customersResourceParameters.PageNumber - 1,
                     pageSize = customersResourceParameters.PageSize,
@@ -58,6 +59,7 @@ public class CustomerController : BaseController
             case ResourceUriType.NextPage:
                 return Url.Link(nameof(GetCustomers), new
                 {
+                    fields = customersResourceParameters.Fields,
                     orderBy = customersResourceParameters.OrderBy,
                     pageNumber = customersResourceParameters.PageNumber + 1,
                     pageSize = customersResourceParameters.PageSize,
@@ -67,6 +69,7 @@ public class CustomerController : BaseController
             default:
                 return Url.Link(nameof(GetCustomers), new
                 {
+                    fields = customersResourceParameters.Fields,
                     orderBy = customersResourceParameters.OrderBy,
                     pageNumber = customersResourceParameters.PageNumber,
                     pageSize = customersResourceParameters.PageSize,

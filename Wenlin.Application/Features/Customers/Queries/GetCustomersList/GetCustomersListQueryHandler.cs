@@ -2,6 +2,7 @@
 using MediatR;
 using Wenlin.Application.Contracts.Infrastructure;
 using Wenlin.Application.Contracts.Persistence;
+using Wenlin.Application.Helpers;
 using Wenlin.Domain.Entities;
 using Wenlin.SharedKernel.Pagination;
 
@@ -39,7 +40,10 @@ internal class GetCustomersListQueryHandler : IRequestHandler<GetCustomersListQu
 
         var customers = await _customerRepository.GetCustomersAsync(request.CustomersResourceParameters);
 
-        getCustomersListQueryResponse.CustomerListDto = new PagedList<CustomerListDto>(_mapper.Map<List<CustomerListDto>>(customers), customers.TotalCount, customers.CurrentPage, customers.PageSize) ;
+        var customerLists = new PagedList<CustomerListDto>(_mapper.Map<List<CustomerListDto>>(customers), customers.TotalCount, customers.CurrentPage, customers.PageSize);
+
+        getCustomersListQueryResponse.CustomerListDto = customerLists;
+        getCustomersListQueryResponse.CustomerExpandoListDto = customerLists.ShapeData(request.CustomersResourceParameters.Fields);
 
         return getCustomersListQueryResponse;
     }

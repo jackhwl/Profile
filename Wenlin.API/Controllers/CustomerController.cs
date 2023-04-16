@@ -14,7 +14,7 @@ public class CustomerController : BaseController
 
     [HttpGet(Name = nameof(GetCustomers))]
     [HttpHead]
-    public async Task<ActionResult> GetCustomers([FromQuery]CustomersResourceParameters customersResourceParameters)
+    public async Task<IActionResult> GetCustomers([FromQuery]CustomersResourceParameters customersResourceParameters)
     {
         var request = new GetCustomersListQuery() { CustomersResourceParameters = customersResourceParameters };
         var response = await _mediator.Send(request);

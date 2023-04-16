@@ -44,38 +44,27 @@ public class CustomerController : BaseController
 
     private string? CreateCustomersResourceUri(CustomersResourceParameters customersResourceParameters, ResourceUriType type)
     {
+        var pageNumber = customersResourceParameters.PageNumber;
         switch (type)
         {
             case ResourceUriType.PreviousPage:
-                return Url.Link(nameof(GetCustomers), new
-                {
-                    fields = customersResourceParameters.Fields,
-                    orderBy= customersResourceParameters.OrderBy,
-                    pageNumber = customersResourceParameters.PageNumber - 1,
-                    pageSize = customersResourceParameters.PageSize,
-                    mainCategory = customersResourceParameters.MainCategory,
-                    searchQuery = customersResourceParameters.SearchQuery,
-                });
+                pageNumber--;
+                break;
             case ResourceUriType.NextPage:
-                return Url.Link(nameof(GetCustomers), new
-                {
-                    fields = customersResourceParameters.Fields,
-                    orderBy = customersResourceParameters.OrderBy,
-                    pageNumber = customersResourceParameters.PageNumber + 1,
-                    pageSize = customersResourceParameters.PageSize,
-                    mainCategory = customersResourceParameters.MainCategory,
-                    searchQuery = customersResourceParameters.SearchQuery,
-                });
+                pageNumber++;
+                break;
             default:
-                return Url.Link(nameof(GetCustomers), new
-                {
-                    fields = customersResourceParameters.Fields,
-                    orderBy = customersResourceParameters.OrderBy,
-                    pageNumber = customersResourceParameters.PageNumber,
-                    pageSize = customersResourceParameters.PageSize,
-                    mainCategory = customersResourceParameters.MainCategory,
-                    searchQuery = customersResourceParameters.SearchQuery
-                });
+                break;
         }
+
+        return Url.Link(nameof(GetCustomers), new
+        {
+            fields = customersResourceParameters.Fields,
+            orderBy = customersResourceParameters.OrderBy,
+            pageNumber,
+            pageSize = customersResourceParameters.PageSize,
+            mainCategory = customersResourceParameters.MainCategory,
+            searchQuery = customersResourceParameters.SearchQuery
+        });
     }
 }

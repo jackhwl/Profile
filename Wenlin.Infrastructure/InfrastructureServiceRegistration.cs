@@ -16,6 +16,8 @@ public static class InfrastructureServiceRegistration
         services.AddTransient<ICsvExporter, CsvExporter>();
         services.AddTransient<IEmailService, EmailService>();
         services.AddTransient<IPropertyMappingService, PropertyMappingService>();
+        services.AddTransient<IPropertyCheckerService, PropertyCheckerService>();
+
 
         return services;
     }

@@ -54,7 +54,7 @@ internal class GetCustomersListQueryHandler : IRequestHandler<GetCustomersListQu
         var customerLists = new PagedList<CustomerListDto>(_mapper.Map<List<CustomerListDto>>(customers), customers.TotalCount, customers.CurrentPage, customers.PageSize);
 
         getCustomersListQueryResponse.CustomerListDto = customerLists;
-        getCustomersListQueryResponse.CustomerExpandoListDto = customerLists.ShapeData(request.CustomersResourceParameters.Fields);
+        getCustomersListQueryResponse.CustomerExpandoListDto = _mapper.Map<IEnumerable<CustomerListDto>>(customers).ShapeData(request.CustomersResourceParameters.Fields);
 
         return getCustomersListQueryResponse;
     }

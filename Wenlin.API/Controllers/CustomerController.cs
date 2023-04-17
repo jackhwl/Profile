@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using Wenlin.API.Helpers;
+using Wenlin.Application.Features.Customers.Queries.GetCustomerDetail;
 using Wenlin.Application.Features.Customers.Queries.GetCustomersList;
 
 namespace Wenlin.API.Controllers;
@@ -40,6 +41,16 @@ public class CustomerController : BaseController
         Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
 
         return Ok(response.CustomerExpandoListDto);
+    }
+
+    [HttpGet("{id}", Name = "GetCustomer")]
+    public async Task<ActionResult> GetCustomer(Guid id, string? fields)
+    {
+        var response = await _mediator.Send(new GetCustomerDetailQuery() { Id = id, Fields = fields });
+
+        if (!response.Success) return HandleFail(response);
+
+        return Ok(response.CustomerExpandoDetailVm);
     }
 
     private string? CreateCustomersResourceUri(CustomersResourceParameters customersResourceParameters, ResourceUriType type)

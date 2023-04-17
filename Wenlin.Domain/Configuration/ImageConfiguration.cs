@@ -17,7 +17,6 @@ public class ImageConfiguration : IEntityTypeConfiguration<Image>
             .HasMaxLength(200);
         builder
             .Property(p => p.OwnerId)
-            .IsRequired()
-            .HasMaxLength(50);
+            .IsRequired();
     }
 }

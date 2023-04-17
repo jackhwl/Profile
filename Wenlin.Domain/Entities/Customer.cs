@@ -14,8 +14,8 @@ public class Customer
 
     public string MainCategory { get; set; } = string.Empty;
 
-    //public ICollection<Course> Courses { get; set; }
-    //    = new List<Course>();
+    public ICollection<Image> Images { get; set; }
+        = new List<Image>();
 
     //public Customer(string firstName, string lastName, string mainCategory)
     //{

@@ -10,5 +10,5 @@ public class Image
 
     public string FileName { get; set; } = string.Empty;
 
-    public string OwnerId { get; set; } = string.Empty;
+    public Guid OwnerId { get; set; } = default!;
 }

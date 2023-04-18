@@ -8,6 +8,8 @@ public class ImageConfiguration : IEntityTypeConfiguration<Image>
     public void Configure(EntityTypeBuilder<Image> builder)
     {
         builder
+            .HasKey(x => x.Id);
+        builder
             .Property(p => p.Title)
             .IsRequired()
             .HasMaxLength(150);

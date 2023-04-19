@@ -34,7 +34,11 @@ public class GalleryController : Controller
 
         using (var responseStream = await response.Content.ReadAsStreamAsync())
         {
-            var images = await JsonSerializer.DeserializeAsync<List<ImageDto>>(responseStream);
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            var images = await JsonSerializer.DeserializeAsync<List<ImageDto>>(responseStream, options);
             return View(new GalleryIndexViewModel(images ?? new List<ImageDto>()));
         }
     }

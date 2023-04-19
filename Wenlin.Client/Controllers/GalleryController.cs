@@ -43,7 +43,7 @@ public class GalleryController : Controller
         }
     }
 
-    public IActionResult Privacy()
+    public IActionResult AddImage()
     {
         return View();
     }

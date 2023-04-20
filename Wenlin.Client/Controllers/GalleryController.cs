@@ -1,11 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System.Diagnostics;
-using System.Net.Http;
+using System.Text;
 using System.Text.Json;
 using Wenlin.Client.Models;
 using Wenlin.Client.ViewModels;
 
 namespace Wenlin.Client.Controllers;
+[Authorize]
 public class GalleryController : Controller
 {
     private readonly IHttpClientFactory _httpClientFactory;
@@ -19,7 +23,7 @@ public class GalleryController : Controller
 
     public async Task<IActionResult> Index()
     {
-        //await LogIdentityInformation();
+        await LogIdentityInformation();
 
         var httpClient = _httpClientFactory.CreateClient("APIClient");
 
@@ -52,5 +56,19 @@ public class GalleryController : Controller
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+    }
+    public async Task LogIdentityInformation()
+    {
+        // get the saved identity token
+        var identityToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.IdToken);
+
+        var userClaimsStringBuilder = new StringBuilder();
+        foreach (var claim in User.Claims)
+        {
+            userClaimsStringBuilder.AppendLine($"Claim type: {claim.Type} - Claim value: {claim.Value}");
+        }
+
+        // log token & claims
+        _logger.LogInformation($"Identity token & user claims: " + $"\n{identityToken} \n{userClaimsStringBuilder}");
     }
 }

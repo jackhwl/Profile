@@ -50,7 +50,14 @@ public class CustomerController : BaseController
 
         if (!response.Success) return HandleFail(response);
 
-        return Ok(response.CustomerExpandoDetailVm);
+        // create links
+        var links = CreateLinksForCustomer(id, fields);
+
+        var linkedResourceToReturn = response.CustomerExpandoDetailVm as IDictionary<string, object?>;
+
+        linkedResourceToReturn.Add("links", links);
+
+        return Ok(linkedResourceToReturn);
     }
 
     private string? CreateCustomersResourceUri(CustomersResourceParameters customersResourceParameters, ResourceUriType type)
@@ -77,5 +84,24 @@ public class CustomerController : BaseController
             mainCategory = customersResourceParameters.MainCategory,
             searchQuery = customersResourceParameters.SearchQuery
         });
+    }
+
+    private IEnumerable<LinkDto> CreateLinksForCustomer(Guid customerId, string? fields)
+    {
+        var links = new List<LinkDto>();
+
+        if (string.IsNullOrWhiteSpace(fields))
+        {
+            links.Add(new(Url.Link("GetCustomer", new { customerId }), "self", "GET"));
+        }
+        else
+        {
+            links.Add(new(Url.Link("GetCustomer", new { customerId, fields }), "self", "GET"));
+        }
+
+        //links.Add(new(Url.Link("CreateCourseForCustomer", new { customerId }), "create_course_for_customer", "POST"));
+        //links.Add(new(Url.Link("GetCoursesForCustomer", new { customerId }), "courses", "GET"));
+
+        return links;
     }
 }

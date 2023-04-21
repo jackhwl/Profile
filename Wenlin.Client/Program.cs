@@ -31,6 +31,7 @@ builder.Services.AddAuthentication(options =>
     //options.Scope.Add("profile");
     //options.CallbackPath= new PathString("signin-oidc");
     options.SaveTokens = true;
+    options.GetClaimsFromUserInfoEndpoint = true;
 });
 
 var app = builder.Build();

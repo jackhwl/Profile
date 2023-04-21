@@ -1,11 +1,14 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Net.Http.Headers;
+using System.IdentityModel.Tokens.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
 // create an HttpClient used for accessing the API
 builder.Services.AddHttpClient("APIClient", client =>

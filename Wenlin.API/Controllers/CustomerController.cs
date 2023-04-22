@@ -68,7 +68,13 @@ public class CustomerController : BaseController
 
         if (!response.Success) return HandleFail(response);
 
-        return CreatedAtRoute("GetCustomer", new { id = response.Customer.Id }, response.Customer);
+        // create links
+        var links = CreateLinksForCustomer(response.CreateCustomerDto.Id, null);
+
+        var linkedResourceToReturn = response.CreateCustomerExpandoObject as IDictionary<string, object?>;
+        linkedResourceToReturn.Add("links", links);
+
+        return CreatedAtRoute("GetCustomer", new { id = response.CreateCustomerDto.Id }, linkedResourceToReturn);
     }
 
     private string? CreateCustomersResourceUri(CustomersResourceParameters customersResourceParameters, ResourceUriType type)
@@ -97,21 +103,21 @@ public class CustomerController : BaseController
         });
     }
 
-    private IEnumerable<LinkDto> CreateLinksForCustomer(Guid customerId, string? fields)
+    private IEnumerable<LinkDto> CreateLinksForCustomer(Guid id, string? fields)
     {
         var links = new List<LinkDto>();
 
         if (string.IsNullOrWhiteSpace(fields))
         {
-            links.Add(new(Url.Link("GetCustomer", new { customerId }), "self", "GET"));
+            links.Add(new(Url.Link("GetCustomer", new { id }), "self", "GET"));
         }
         else
         {
-            links.Add(new(Url.Link("GetCustomer", new { customerId, fields }), "self", "GET"));
+            links.Add(new(Url.Link("GetCustomer", new { id, fields }), "self", "GET"));
         }
 
-        //links.Add(new(Url.Link("CreateCourseForCustomer", new { customerId }), "create_course_for_customer", "POST"));
-        //links.Add(new(Url.Link("GetCoursesForCustomer", new { customerId }), "courses", "GET"));
+        //links.Add(new(Url.Link("CreateCourseForCustomer", new { id }), "create_course_for_customer", "POST"));
+        //links.Add(new(Url.Link("GetCoursesForCustomer", new { id }), "courses", "GET"));
 
         return links;
     }

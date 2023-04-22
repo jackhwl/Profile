@@ -1,4 +1,5 @@
-﻿using Wenlin.Application.Responses;
+﻿using System.Dynamic;
+using Wenlin.Application.Responses;
 
 namespace Wenlin.Application.Features.Customers.Commands.CreateCustomer;
 public class CreateCustomerCommandResponse : BaseResponse
@@ -7,5 +8,6 @@ public class CreateCustomerCommandResponse : BaseResponse
 	{
 
 	}
-    public CreateCustomerDto Customer { get; set; } = default!;
+    public CreateCustomerDto CreateCustomerDto { get; set; } = default!;
+    public ExpandoObject CreateCustomerExpandoObject { get; set; } = default!;
 }

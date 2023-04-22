@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Wenlin.Application.Contracts.Persistence;
+using Wenlin.Application.Helpers;
 using Wenlin.Domain.Entities;
 
 namespace Wenlin.Application.Features.Customers.Commands.CreateCustomer;
@@ -43,7 +44,9 @@ public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerComman
         {
             var customer = _mapper.Map<Customer>(request);
             customer = await _customerRepository.AddAsync(customer);
-            createCustomerCommandResponse.Customer = _mapper.Map<CreateCustomerDto>(customer);
+            var createCustomerDto = _mapper.Map<CreateCustomerDto>(customer);
+            createCustomerCommandResponse.CreateCustomerDto = createCustomerDto!;
+            createCustomerCommandResponse.CreateCustomerExpandoObject = createCustomerDto.ShapeData(request.Fields);
         }
 
         return createCustomerCommandResponse;

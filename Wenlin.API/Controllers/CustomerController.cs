@@ -68,13 +68,11 @@ public class CustomerController : BaseController
 
         if (!response.Success) return HandleFail(response);
 
-        // create links
-        var links = CreateLinksForCustomer(response.CreateCustomerDto.Id, null);
-
         var linkedResourceToReturn = response.CreateCustomerExpandoObject as IDictionary<string, object?>;
+        var links = CreateLinksForCustomer(Guid.Parse(linkedResourceToReturn["Id"]!.ToString()!), null);
         linkedResourceToReturn.Add("links", links);
 
-        return CreatedAtRoute("GetCustomer", new { id = response.CreateCustomerDto.Id }, linkedResourceToReturn);
+        return CreatedAtRoute("GetCustomer", new { id = linkedResourceToReturn["Id"] }, linkedResourceToReturn);
     }
 
     private string? CreateCustomersResourceUri(CustomersResourceParameters customersResourceParameters, ResourceUriType type)

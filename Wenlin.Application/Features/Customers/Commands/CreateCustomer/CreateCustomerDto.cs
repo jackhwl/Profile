@@ -1,5 +1,5 @@
 ﻿namespace Wenlin.Application.Features.Customers.Commands.CreateCustomer;
-public class CreateCustomerDto
+internal class CreateCustomerDto
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;

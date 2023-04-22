@@ -45,7 +45,6 @@ public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerComman
             var customer = _mapper.Map<Customer>(request);
             customer = await _customerRepository.AddAsync(customer);
             var createCustomerDto = _mapper.Map<CreateCustomerDto>(customer);
-            createCustomerCommandResponse.CreateCustomerDto = createCustomerDto!;
             createCustomerCommandResponse.CreateCustomerExpandoObject = createCustomerDto.ShapeData(request.Fields);
         }
 

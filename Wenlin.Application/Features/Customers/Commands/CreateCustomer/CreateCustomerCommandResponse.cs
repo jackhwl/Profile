@@ -8,6 +8,5 @@ public class CreateCustomerCommandResponse : BaseResponse
 	{
 
 	}
-    public CreateCustomerDto CreateCustomerDto { get; set; } = default!;
     public ExpandoObject CreateCustomerExpandoObject { get; set; } = default!;
 }

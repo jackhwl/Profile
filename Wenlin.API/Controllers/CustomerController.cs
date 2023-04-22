@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using Wenlin.API.Helpers;
+using Wenlin.Application.Features.Customers.Commands.CreateCustomer;
 using Wenlin.Application.Features.Customers.Queries.GetCustomerDetail;
 using Wenlin.Application.Features.Customers.Queries.GetCustomersList;
 
@@ -60,6 +61,16 @@ public class CustomerController : BaseController
         return Ok(linkedResourceToReturn);
     }
 
+    [HttpPost]
+    public async Task<ActionResult> CreateCustomer(CreateCustomerCommand createCustomerCommand)
+    {
+        var response = await _mediator.Send(createCustomerCommand);
+
+        if (!response.Success) return HandleFail(response);
+
+        return CreatedAtRoute("GetCustomer", new { id = response.Customer.Id }, response.Customer);
+    }
+
     private string? CreateCustomersResourceUri(CustomersResourceParameters customersResourceParameters, ResourceUriType type)
     {
         var pageNumber = customersResourceParameters.PageNumber;
@@ -81,7 +92,7 @@ public class CustomerController : BaseController
             orderBy = customersResourceParameters.OrderBy,
             pageNumber,
             pageSize = customersResourceParameters.PageSize,
-            mainCategory = customersResourceParameters.MainCategory,
+            mainCustomer = customersResourceParameters.MainCategory,
             searchQuery = customersResourceParameters.SearchQuery
         });
     }

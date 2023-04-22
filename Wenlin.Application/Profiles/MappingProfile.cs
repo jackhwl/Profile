@@ -5,6 +5,7 @@ using Wenlin.Application.Features.Categories.Queries.GetCategoriesList;
 using Wenlin.Application.Features.Categories.Queries.GetCategoriesWithProducts;
 using Wenlin.Application.Features.Categories.Queries.GetCategoryCollection;
 using Wenlin.Application.Features.Categories.Queries.GetCategoryDetail;
+using Wenlin.Application.Features.Customers.Commands.CreateCustomer;
 using Wenlin.Application.Features.Customers.Queries.GetCustomerDetail;
 using Wenlin.Application.Features.Customers.Queries.GetCustomersList;
 using Wenlin.Application.Features.Images.Queries.GetImagesList;
@@ -60,6 +61,10 @@ public class MappingProfile : Profile
         CreateMap<Customer, CustomerDetailVm>()
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"))
             .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.GetCurrentAge()));
+        CreateMap<Customer, CreateCustomerDto>()
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"))
+            .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.GetCurrentAge()));
+        CreateMap<Customer, CreateCustomerCommand>().ReverseMap();
 
         CreateMap<Image, ImageListDto>().ReverseMap();
     }

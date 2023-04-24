@@ -54,7 +54,7 @@ public class CustomerController : BaseController
         return Ok(linkedCollectionResource);
     }
 
-    [HttpGet("{id}", Name = "GetCustomer")]
+    [HttpGet("{id}", Name = nameof(GetCustomer))]
     public async Task<ActionResult> GetCustomer(Guid id, string? fields)
     {
         var response = await _mediator.Send(new GetCustomerDetailQuery() { Id = id, Fields = fields });
@@ -71,7 +71,7 @@ public class CustomerController : BaseController
         return Ok(linkedResourceToReturn);
     }
 
-    [HttpPost]
+    [HttpPost(Name = nameof(CreateCustomer))]
     public async Task<ActionResult> CreateCustomer(CreateCustomerCommand createCustomerCommand)
     {
         var response = await _mediator.Send(createCustomerCommand);

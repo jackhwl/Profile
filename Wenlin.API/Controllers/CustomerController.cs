@@ -41,6 +41,22 @@ public class CustomerController : BaseController
 
         Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
 
+        // create links
+        var links = CreateLinksForCustomers(customersResourceParameters);
+        var shapedCustomersWithLinks = response.CustomerExpandoListDto.Select(customer =>
+        {
+            var customerAsDictionary = customer as IDictionary<string, object?>;
+            var customerLinks = CreateLinksForCustomer((Guid)customerAsDictionary["Id"]!, null);
+            customerAsDictionary.Add("links", customerLinks);
+            return customerAsDictionary;
+        });
+
+        var linkedCollectionResource = new
+        {
+            value = shapedCustomersWithLinks,
+            links
+        };
+
         return Ok(response.CustomerExpandoListDto);
     }
 
@@ -69,7 +85,7 @@ public class CustomerController : BaseController
         if (!response.Success) return HandleFail(response);
 
         var linkedResourceToReturn = response.CreateCustomerExpandoObject as IDictionary<string, object?>;
-        var links = CreateLinksForCustomer(Guid.Parse(linkedResourceToReturn["Id"]!.ToString()!), null);
+        var links = CreateLinksForCustomer((Guid)linkedResourceToReturn["Id"]!, null);
         linkedResourceToReturn.Add("links", links);
 
         return CreatedAtRoute("GetCustomer", new { id = linkedResourceToReturn["Id"] }, linkedResourceToReturn);
@@ -86,6 +102,7 @@ public class CustomerController : BaseController
             case ResourceUriType.NextPage:
                 pageNumber++;
                 break;
+            case ResourceUriType.Current:
             default:
                 break;
         }
@@ -99,6 +116,15 @@ public class CustomerController : BaseController
             mainCustomer = customersResourceParameters.MainCategory,
             searchQuery = customersResourceParameters.SearchQuery
         });
+    }
+
+    private IEnumerable<LinkDto> CreateLinksForCustomers(CustomersResourceParameters customersResourceParameters)
+    {
+        var links = new List<LinkDto>();
+
+        links.Add(new(CreateCustomersResourceUri(customersResourceParameters, ResourceUriType.Current), "self", "GET"));
+
+        return links;
     }
 
     private IEnumerable<LinkDto> CreateLinksForCustomer(Guid id, string? fields)

@@ -25,24 +25,18 @@ public class CustomerController : BaseController
 
         var customers = response.CustomerListDto;
 
-        var previousPageLink = customers.HasPrevious ? CreateCustomersResourceUri(customersResourceParameters, ResourceUriType.PreviousPage) : null;
-
-        var nextPageLink = customers.HasNext ? CreateCustomersResourceUri(customersResourceParameters, ResourceUriType.NextPage) : null;
-
         var paginationMetadata = new
         {
             totalCount = customers.TotalCount,
             pageSize = customers.PageSize,
             currentPage = customers.CurrentPage,
-            totalPages = customers.TotalPages,
-            previousPageLink,
-            nextPageLink
+            totalPages = customers.TotalPages
         };
 
         Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
 
         // create links
-        var links = CreateLinksForCustomers(customersResourceParameters);
+        var links = CreateLinksForCustomers(customersResourceParameters, customers.HasNext, customers.HasPrevious);
         var shapedCustomersWithLinks = response.CustomerExpandoListDto.Select(customer =>
         {
             var customerAsDictionary = customer as IDictionary<string, object?>;
@@ -57,7 +51,7 @@ public class CustomerController : BaseController
             links
         };
 
-        return Ok(response.CustomerExpandoListDto);
+        return Ok(linkedCollectionResource);
     }
 
     [HttpGet("{id}", Name = "GetCustomer")]
@@ -118,11 +112,17 @@ public class CustomerController : BaseController
         });
     }
 
-    private IEnumerable<LinkDto> CreateLinksForCustomers(CustomersResourceParameters customersResourceParameters)
+    private IEnumerable<LinkDto> CreateLinksForCustomers(CustomersResourceParameters customersResourceParameters, bool hasNext, bool hasPrevious)
     {
         var links = new List<LinkDto>();
 
         links.Add(new(CreateCustomersResourceUri(customersResourceParameters, ResourceUriType.Current), "self", "GET"));
+
+        if (hasNext)
+            links.Add(new(CreateCustomersResourceUri(customersResourceParameters, ResourceUriType.NextPage), "nextPage", "GET"));
+
+        if (hasPrevious)
+            links.Add(new(CreateCustomersResourceUri(customersResourceParameters, ResourceUriType.PreviousPage), "previousPage", "GET"));
 
         return links;
     }

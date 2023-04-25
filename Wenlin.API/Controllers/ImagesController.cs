@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Wenlin.Application.Features.Images.Queries.GetImageDetail;
 using Wenlin.Application.Features.Images.Queries.GetImagesList;
 
 namespace Wenlin.API.Controllers;
@@ -15,5 +16,15 @@ public class ImagesController : BaseController
         var response = await _mediator.Send(new GetImagesListQuery());
 
         return Ok(response.ImageListDto);
+    }
+
+    [HttpGet("{id}", Name = "GetImage")]
+    public async Task<ActionResult<ImageDetailDto>> GetImage(Guid id)
+    {
+        var response = await _mediator.Send(new GetImageDetailQuery() { Id = id});
+
+        if (!response.Success) return HandleFail(response);
+
+        return Ok(response.ImageDetailDto);
     }
 }

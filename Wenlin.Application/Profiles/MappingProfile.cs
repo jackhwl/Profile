@@ -8,6 +8,7 @@ using Wenlin.Application.Features.Categories.Queries.GetCategoryDetail;
 using Wenlin.Application.Features.Customers.Commands.CreateCustomer;
 using Wenlin.Application.Features.Customers.Queries.GetCustomerDetail;
 using Wenlin.Application.Features.Customers.Queries.GetCustomersList;
+using Wenlin.Application.Features.Images.Queries.GetImageDetail;
 using Wenlin.Application.Features.Images.Queries.GetImagesList;
 using Wenlin.Application.Features.Products.Commands.CreateProduct;
 using Wenlin.Application.Features.Products.Commands.PartiallyUpdateProduct;
@@ -67,5 +68,6 @@ public class MappingProfile : Profile
         CreateMap<Customer, CreateCustomerCommand>().ReverseMap();
 
         CreateMap<Image, ImageListDto>().ReverseMap();
+        CreateMap<Image, ImageDetailDto>().ReverseMap();
     }
 }

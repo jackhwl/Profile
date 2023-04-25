@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Wenlin.Application.Features.Images.Commands.CreateImage;
 using Wenlin.Application.Features.Images.Queries.GetImageDetail;
 using Wenlin.Application.Features.Images.Queries.GetImagesList;
 
@@ -7,7 +8,11 @@ namespace Wenlin.API.Controllers;
 [Route("api/images")]
 public class ImagesController : BaseController
 {
-    public ImagesController(IMediator mediator) : base(mediator) { }
+    private readonly IWebHostEnvironment _hostingEnvironment;
+    public ImagesController(IMediator mediator, IWebHostEnvironment hostingEnvironment) : base(mediator) 
+    { 
+        _hostingEnvironment = hostingEnvironment;
+    }
 
     [HttpGet]
     [HttpHead]
@@ -27,4 +32,19 @@ public class ImagesController : BaseController
 
         return Ok(response.ImageDetailDto);
     }
+
+    [HttpPost()]
+    //[Authorize(Roles = "PayingUser")]
+    public async Task<ActionResult<CreateImageDto>> CreateImage([FromBody] CreateImageCommand createImageCommand)
+    {
+        createImageCommand.OwnerId = Guid.Parse(User.Claims.FirstOrDefault(c => c.Type == "sub")!.Value);
+        createImageCommand.WebRootPath = _hostingEnvironment.WebRootPath;
+
+        var response = await _mediator.Send(createImageCommand);
+        
+        if (!response.Success) return HandleFail(response);
+
+        return CreatedAtRoute("GetImage", new { id = response.CreateImageDto.Id }, response.CreateImageDto);
+    }
+
 }

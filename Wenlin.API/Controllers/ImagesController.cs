@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Wenlin.Application.Features.Images.Commands.CreateImage;
 using Wenlin.Application.Features.Images.Queries.GetImageDetail;
@@ -6,6 +7,7 @@ using Wenlin.Application.Features.Images.Queries.GetImagesList;
 
 namespace Wenlin.API.Controllers;
 [Route("api/images")]
+[Authorize]
 public class ImagesController : BaseController
 {
     private readonly IWebHostEnvironment _hostingEnvironment;

@@ -10,6 +10,8 @@ using Wenlin.Application;
 using Wenlin.Infrastructure;
 using Wenlin.Persistence;
 using System.Diagnostics;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Wenlin.API;
 
@@ -75,6 +77,18 @@ internal static class StartupHelperExtensions
         {
             options.AddPolicy("Open", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
         });
+
+        JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.Authority = "https://localhost:5001";
+                options.Audience = "wenlincoreapi";
+                options.TokenValidationParameters = new()
+                {
+                    ValidTypes = new[] { "at+jwt" }
+                };
+            });
 
         return builder.Build();
     }
@@ -142,6 +156,8 @@ internal static class StartupHelperExtensions
         }
 
         app.UseHttpsRedirection();
+
+        app.UseAuthentication();
 
         app.UseAuthorization();
 

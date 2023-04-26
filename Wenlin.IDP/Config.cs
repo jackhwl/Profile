@@ -16,12 +16,17 @@ public static class Config
     public static IEnumerable<ApiResource> ApiResources =>
         new ApiResource[]
             {
-                    new ApiResource("wenlincoreapi", "Wenlin Image Gallery API")
+                new ApiResource("wenlincoreapi", "Wenlin Image Gallery API")
+                {
+                    Scopes = { "wenlincoreapi.fullaccess" }
+                }
             };
 
     public static IEnumerable<ApiScope> ApiScopes =>
         new ApiScope[]
-            { };
+        {
+            new ApiScope("wenlincoreapi.fullaccess")
+        };
 
     public static IEnumerable<Client> Clients =>
         new Client[] 
@@ -44,7 +49,7 @@ public static class Config
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
                     "roles",
-                    "wenlincoreapi"
+                    "wenlincoreapi.fullaccess"
                 },
                 ClientSecrets =
                 {

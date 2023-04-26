@@ -31,7 +31,7 @@ builder.Services.AddAuthentication(options =>
 {
     options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     options.Authority = "https://localhost:5001";
-    options.ClientId = "imagegalleryclient";
+    options.ClientId = "wenlincoreclient";
     options.ClientSecret = "secret";
     options.ResponseType = "code";
     //options.Scope.Add("openid");
@@ -43,6 +43,7 @@ builder.Services.AddAuthentication(options =>
     options.ClaimActions.DeleteClaim("sid");
     options.ClaimActions.DeleteClaim("idp");
     options.Scope.Add("roles");
+    options.Scope.Add("wenlincoreapi.fullaccess");
     options.ClaimActions.MapJsonKey("role", "role");
     options.TokenValidationParameters = new()
     {

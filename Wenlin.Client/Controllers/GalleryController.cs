@@ -63,42 +63,42 @@ public class GalleryController : Controller
             return View();
         }
 
-        //// create an ImageForCreation instance
-        //ImageForCreation? imageForCreation = null;
+        // create an ImageForCreation instance
+        ImageForCreation? imageForCreation = null;
 
-        //// take the first (only) file in the Files list
-        //var imageFile = addImageViewModel.Files.First();
+        // take the first (only) file in the Files list
+        var imageFile = addImageViewModel.Files.First();
 
-        //if (imageFile.Length > 0)
-        //{
-        //    using (var fileStream = imageFile.OpenReadStream())
-        //    using (var ms = new MemoryStream())
-        //    {
-        //        fileStream.CopyTo(ms);
-        //        imageForCreation = new ImageForCreation(
-        //            addImageViewModel.Title, ms.ToArray());
-        //    }
-        //}
+        if (imageFile.Length > 0)
+        {
+            using (var fileStream = imageFile.OpenReadStream())
+            using (var ms = new MemoryStream())
+            {
+                fileStream.CopyTo(ms);
+                imageForCreation = new ImageForCreation(
+                    addImageViewModel.Title, ms.ToArray());
+            }
+        }
 
-        //// serialize it
-        //var serializedImageForCreation = JsonSerializer.Serialize(imageForCreation);
+        // serialize it
+        var serializedImageForCreation = JsonSerializer.Serialize(imageForCreation);
 
-        //var httpClient = _httpClientFactory.CreateClient("APIClient");
+        var httpClient = _httpClientFactory.CreateClient("APIClient");
 
-        //var request = new HttpRequestMessage(
-        //    HttpMethod.Post,
-        //    $"/api/images")
-        //{
-        //    Content = new StringContent(
-        //        serializedImageForCreation,
-        //        System.Text.Encoding.Unicode,
-        //        "application/json")
-        //};
+        var request = new HttpRequestMessage(
+            HttpMethod.Post,
+            $"/api/images")
+        {
+            Content = new StringContent(
+                serializedImageForCreation,
+                System.Text.Encoding.Unicode,
+                "application/json")
+        };
 
-        //var response = await httpClient.SendAsync(
-        //    request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+        var response = await httpClient.SendAsync(
+            request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
 
-        //response.EnsureSuccessStatusCode();
+        response.EnsureSuccessStatusCode();
 
         return RedirectToAction("Index");
     }

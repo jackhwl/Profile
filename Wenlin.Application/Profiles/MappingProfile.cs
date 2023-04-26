@@ -70,7 +70,7 @@ public class MappingProfile : Profile
 
         CreateMap<Image, ImageListDto>();
         CreateMap<Image, ImageDetailDto>();
-        CreateMap<Image, CreateImageCommand>();
-        CreateMap<CreateImageDto, Image>();
+        CreateMap<Image, CreateImageCommand>().ReverseMap();
+        CreateMap<Image, CreateImageDto>();
     }
 }

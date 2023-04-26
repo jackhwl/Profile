@@ -20,7 +20,9 @@ public class ImagesController : BaseController
     [HttpHead]
     public async Task<ActionResult<IEnumerable<ImageListDto>>> GetImages()
     {
-        var response = await _mediator.Send(new GetImagesListQuery());
+        var ownerId = User.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
+
+        var response = await _mediator.Send(new GetImagesListQuery() { OwnerId = ownerId });
 
         return Ok(response.ImageListDto);
     }

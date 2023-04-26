@@ -18,7 +18,14 @@ public class GetImagesListQueryHandler : IRequestHandler<GetImagesListQuery, Get
     {
         var getImagesListQueryResponse = new GetImagesListQueryResponse();
 
-        var categoryImages = (await _imageRepository.ListAllAsync()).OrderBy(p => p.FileName);
+        if (request.OwnerId == null)
+        {
+            getImagesListQueryResponse.Success = false;
+            getImagesListQueryResponse.NotFound = true;
+
+            return getImagesListQueryResponse;
+        }
+        var categoryImages = (await _imageRepository.ListAllAsync(Guid.Parse(request.OwnerId))).OrderBy(p => p.FileName);
 
         getImagesListQueryResponse.ImageListDto = _mapper.Map<List<ImageListDto>>(categoryImages);
 

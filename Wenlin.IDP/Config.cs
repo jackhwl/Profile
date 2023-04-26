@@ -13,6 +13,12 @@ public static class Config
             new IdentityResource("roles", "Your role(s)", new [] { "role" })
         };
 
+    public static IEnumerable<ApiResource> ApiResources =>
+        new ApiResource[]
+            {
+                    new ApiResource("wenlincoreapi", "Wenlin Image Gallery API")
+            };
+
     public static IEnumerable<ApiScope> ApiScopes =>
         new ApiScope[]
             { };
@@ -22,8 +28,8 @@ public static class Config
         { 
             new Client()
             {
-                ClientName= "Image Gallery",
-                ClientId= "imagegalleryclient",
+                ClientName= "Wenlin Core Image Gallery",
+                ClientId= "wenlincoreclient",
                 AllowedGrantTypes = GrantTypes.Code,
                 RedirectUris =
                 {
@@ -37,7 +43,8 @@ public static class Config
                 {
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
-                    "roles"
+                    "roles",
+                    "wenlincoreapi"
                 },
                 ClientSecrets =
                 {

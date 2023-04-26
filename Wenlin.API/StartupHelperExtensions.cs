@@ -86,6 +86,8 @@ internal static class StartupHelperExtensions
                 options.Audience = "wenlincoreapi";
                 options.TokenValidationParameters = new()
                 {
+                    NameClaimType = "given_name",
+                    RoleClaimType = "role",
                     ValidTypes = new[] { "at+jwt" }
                 };
             });

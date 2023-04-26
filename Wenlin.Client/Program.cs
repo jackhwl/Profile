@@ -32,7 +32,7 @@ builder.Services.AddAuthentication(options =>
 .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
 {
     options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.Authority = "https://localhost:5001";
+    options.Authority = "https://localhost:5003";
     options.ClientId = "wenlincoreclient";
     options.ClientSecret = "secret";
     options.ResponseType = "code";

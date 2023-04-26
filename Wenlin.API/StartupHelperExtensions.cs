@@ -82,7 +82,7 @@ internal static class StartupHelperExtensions
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
-                options.Authority = "https://localhost:5001";
+                options.Authority = "https://localhost:5003";
                 options.Audience = "wenlincoreapi";
                 options.TokenValidationParameters = new()
                 {

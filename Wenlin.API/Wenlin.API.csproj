@@ -32,4 +32,8 @@
     <ProjectReference Include="..\Wenlin.Persistence\Wenlin.Persistence.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Images\" />
+  </ItemGroup>
+
 </Project>

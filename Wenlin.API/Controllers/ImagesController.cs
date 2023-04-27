@@ -38,11 +38,12 @@ public class ImagesController : BaseController
     }
 
     [HttpPost()]
-    //[Authorize(Roles = "PayingUser")]
+    [Authorize(Roles = "PayingUser")]
     public async Task<ActionResult<CreateImageDto>> CreateImage([FromBody] CreateImageCommand createImageCommand)
     {
+        var inrole = User.IsInRole("PayingUser");
         createImageCommand.OwnerId = Guid.Parse(User.Claims.FirstOrDefault(c => c.Type == "sub")!.Value);
-        createImageCommand.WebRootPath = _hostingEnvironment.WebRootPath;
+        createImageCommand.WebRootPath = @"C:\Jack\Projects\Profile\Wenlin.API";//_hostingEnvironment.WebRootPath;
 
         var response = await _mediator.Send(createImageCommand);
         

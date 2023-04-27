@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Wenlin.Application.Features.Images.Commands.CreateImage;
 using Wenlin.Application.Features.Images.Commands.DeleteImage;
+using Wenlin.Application.Features.Images.Commands.UpdateImage;
 using Wenlin.Application.Features.Images.Queries.GetImageDetail;
 using Wenlin.Application.Features.Images.Queries.GetImagesList;
 
@@ -59,6 +60,17 @@ public class ImagesController : BaseController
     public async Task<IActionResult> DeleteImage(Guid id)
     {
         var response = await _mediator.Send(new DeleteImageCommand() { Id = id });
+
+        if (!response.Success) return HandleFail(response);
+
+        return NoContent();
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateImage(Guid id, UpdateImageCommand updateImageCommand)
+    {
+        updateImageCommand.Id = id;
+        var response = await _mediator.Send(updateImageCommand);
 
         if (!response.Success) return HandleFail(response);
 

@@ -35,6 +35,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IDP", "IDP", "{8291B579-521
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wenlin.IDP", "Wenlin.IDP\Wenlin.IDP.csproj", "{12AD4356-8DA7-47CD-83B8-C46E57CD00BD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wenlin.Authorization", "Wenlin.Authorization\Wenlin.Authorization.csproj", "{B5235CA8-0D1B-44F4-96C9-7A294777CA32}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,10 @@ Global
 		{12AD4356-8DA7-47CD-83B8-C46E57CD00BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12AD4356-8DA7-47CD-83B8-C46E57CD00BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{12AD4356-8DA7-47CD-83B8-C46E57CD00BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5235CA8-0D1B-44F4-96C9-7A294777CA32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5235CA8-0D1B-44F4-96C9-7A294777CA32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5235CA8-0D1B-44F4-96C9-7A294777CA32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5235CA8-0D1B-44F4-96C9-7A294777CA32}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -96,6 +102,7 @@ Global
 		{8466E953-1101-4091-8206-2B431623B1EA} = {46254154-9FD0-4E10-9E14-4EFB37B13773}
 		{8DCBC737-CECD-4D0B-8332-104CB7F4D0AB} = {B24ECACF-029B-4E6C-9679-1F0504E72AD9}
 		{12AD4356-8DA7-47CD-83B8-C46E57CD00BD} = {8291B579-5214-4502-AB4D-6E1FA598F778}
+		{B5235CA8-0D1B-44F4-96C9-7A294777CA32} = {BE034696-B96F-4703-A25E-28D3DCC92150}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C51C9529-86FC-4B21-94B0-B16BD1496B3E}

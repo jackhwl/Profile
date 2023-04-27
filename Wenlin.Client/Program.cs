@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Net.Http.Headers;
 using System.IdentityModel.Tokens.Jwt;
+using Wenlin.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,12 +47,19 @@ builder.Services.AddAuthentication(options =>
     options.ClaimActions.DeleteClaim("idp");
     options.Scope.Add("roles");
     options.Scope.Add("wenlincoreapi.fullaccess");
+    options.Scope.Add("country");
     options.ClaimActions.MapJsonKey("role", "role");
+    options.ClaimActions.MapUniqueJsonKey("country", "country");
     options.TokenValidationParameters = new()
     {
         NameClaimType = "given_name",
         RoleClaimType = "role"
     };
+});
+
+builder.Services.AddAuthorization(authorizationOptions =>
+{
+    authorizationOptions.AddPolicy("UserCanAddImage", AuthorizationPolicies.CanAddImage());
 });
 
 var app = builder.Build();

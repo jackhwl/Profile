@@ -11,4 +11,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.16" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Wenlin.Authorization\Wenlin.Authorization.csproj" />
+  </ItemGroup>
+
 </Project>

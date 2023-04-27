@@ -28,7 +28,8 @@ public class TestUsers
                     {
                         new Claim("role", "FreeUser"),
                         new Claim(JwtClaimTypes.GivenName, "David"),
-                        new Claim(JwtClaimTypes.FamilyName, "Chi")
+                        new Claim(JwtClaimTypes.FamilyName, "Chi"),
+                        new Claim("country", "nl")
                     }
                 },
                 new TestUser
@@ -41,7 +42,8 @@ public class TestUsers
                     {
                         new Claim("role", "PayingUser"),
                         new Claim(JwtClaimTypes.GivenName, "Emma"),
-                        new Claim(JwtClaimTypes.FamilyName, "Zhao")
+                        new Claim(JwtClaimTypes.FamilyName, "Zhao"),
+                        new Claim("country", "be")
                     }
                 }
             };

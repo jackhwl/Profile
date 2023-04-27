@@ -96,6 +96,10 @@ internal static class StartupHelperExtensions
         builder.Services.AddAuthorization(authorizationOptions =>
         {
             authorizationOptions.AddPolicy("UserCanAddImage", AuthorizationPolicies.CanAddImage());
+            authorizationOptions.AddPolicy("ClientApplicationCanWrite", policyBuilder =>
+            {
+                policyBuilder.RequireClaim("scope", "wenlincoreapi.write");
+            });
         });
 
         return builder.Build();

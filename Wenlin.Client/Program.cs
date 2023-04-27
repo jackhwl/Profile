@@ -46,7 +46,9 @@ builder.Services.AddAuthentication(options =>
     options.ClaimActions.DeleteClaim("sid");
     options.ClaimActions.DeleteClaim("idp");
     options.Scope.Add("roles");
-    options.Scope.Add("wenlincoreapi.fullaccess");
+    //options.Scope.Add("wenlincoreapi.fullaccess");
+    options.Scope.Add("wenlincoreapi.read");
+    options.Scope.Add("wenlincoreapi.write");
     options.Scope.Add("country");
     options.ClaimActions.MapJsonKey("role", "role");
     options.ClaimActions.MapUniqueJsonKey("country", "country");

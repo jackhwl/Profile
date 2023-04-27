@@ -47,7 +47,8 @@ public class GalleryController : Controller
         }
     }
 
-    [Authorize(Roles = "PayingUser")]
+    //[Authorize(Roles = "PayingUser")]
+    [Authorize(Policy = "UserCanAddImage")]
     public IActionResult AddImage()
     {
         return View();
@@ -55,7 +56,8 @@ public class GalleryController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = "PayingUser")]
+    //[Authorize(Roles = "PayingUser")]
+    [Authorize(Policy = "UserCanAddImage")]
     public async Task<IActionResult> AddImage(AddImageViewModel addImageViewModel)
     {
         if (!ModelState.IsValid)

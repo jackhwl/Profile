@@ -38,7 +38,8 @@ public class ImagesController : BaseController
     }
 
     [HttpPost()]
-    [Authorize(Roles = "PayingUser")]
+    //[Authorize(Roles = "PayingUser")]
+    [Authorize(Policy = "UserCanAddImage")]
     public async Task<ActionResult<CreateImageDto>> CreateImage([FromBody] CreateImageCommand createImageCommand)
     {
         var inrole = User.IsInRole("PayingUser");

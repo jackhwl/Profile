@@ -18,7 +18,7 @@ public static class Config
     public static IEnumerable<ApiResource> ApiResources =>
         new ApiResource[]
             {
-                new ApiResource("wenlincoreapi", "Wenlin Image Gallery API", new [] { "role" })
+                new ApiResource("wenlincoreapi", "Wenlin Image Gallery API", new [] { "role", "country"  })
                 {
                     Scopes = { "wenlincoreapi.fullaccess" }
                 }

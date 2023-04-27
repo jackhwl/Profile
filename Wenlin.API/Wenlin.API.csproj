@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Wenlin.Application\Wenlin.Application.csproj" />
+    <ProjectReference Include="..\Wenlin.Authorization\Wenlin.Authorization.csproj" />
     <ProjectReference Include="..\Wenlin.Infrastructure\Wenlin.Infrastructure.csproj" />
     <ProjectReference Include="..\Wenlin.Persistence\Wenlin.Persistence.csproj" />
   </ItemGroup>

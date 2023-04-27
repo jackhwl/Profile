@@ -12,6 +12,7 @@ using Wenlin.Persistence;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Wenlin.Authorization;
 
 namespace Wenlin.API;
 
@@ -91,6 +92,11 @@ internal static class StartupHelperExtensions
                     ValidTypes = new[] { "at+jwt" }
                 };
             });
+
+        builder.Services.AddAuthorization(authorizationOptions =>
+        {
+            authorizationOptions.AddPolicy("UserCanAddImage", AuthorizationPolicies.CanAddImage());
+        });
 
         return builder.Build();
     }

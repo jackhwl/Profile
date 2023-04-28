@@ -56,23 +56,36 @@ public class CustomerController : BaseController
         return Ok(linkedCollectionResource);
     }
 
+    [Produces("application/json", "application/vnd.wenlin.hateoas+json"
+       , "application/vnd.wenlin.hateoas+json"
+       , "application/vnd.wenlin.customer.full+json"
+       , "application/vnd.wenlin.customer.full.hateoas+json"
+       , "application/vnd.wenlin.customer.friendly+json"
+       , "application/vnd.wenlin.customer.friendly.hateoas+json"
+       )]
     [HttpGet("{id}", Name = nameof(GetCustomer))]
     public async Task<ActionResult> GetCustomer(Guid id, string? fields, [FromHeader(Name = "Accept")] string? mediaType)
     {
-        var mediaTypeValue = MediaTypeHeaderValue.TryParse(mediaType, out var parsedMediaType) ? parsedMediaType.MediaType.ToString() : null;
+        string? mediaTypeValue = null;
+        var includeLink = false;
+        if (MediaTypeHeaderValue.TryParse(mediaType, out var parsedMediaType))
+        {
+            includeLink = parsedMediaType!.SubTypeWithoutSuffix.EndsWith("hateoas", StringComparison.InvariantCultureIgnoreCase);
+            mediaTypeValue = includeLink ? parsedMediaType.SubTypeWithoutSuffix.Substring(0, parsedMediaType.SubTypeWithoutSuffix.Length - 8) : parsedMediaType.SubTypeWithoutSuffix.Value;
+        }
 
-        var response = await _mediator.Send(new GetCustomerDetailQuery() { Id = id, Fields = fields, MediaType = mediaTypeValue });
+        var response = await _mediator.Send(new GetCustomerDetailQuery() { Id = id, Fields = fields, MediaType = mediaTypeValue, IncludeLink = includeLink });
 
         if (!response.Success) return HandleFail(response);
 
-        if (response.HasHateoas)
+        if (includeLink)
         {
             // create links
             var links = CreateLinksForCustomer(id, fields);
 
             var linkedResourceToReturn = response.CustomerVm as IDictionary<string, object?>;
 
-            linkedResourceToReturn.Add("links", links);
+            linkedResourceToReturn!.Add("links", links);
             return Ok(linkedResourceToReturn);
         }
 

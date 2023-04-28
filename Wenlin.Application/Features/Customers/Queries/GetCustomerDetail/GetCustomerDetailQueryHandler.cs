@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
 using MediatR;
-//using System.Net.Http.Headers;
-using System.Net.Http;
 using Wenlin.Application.Contracts.Infrastructure;
 using Wenlin.Application.Contracts.Persistence;
 using Wenlin.Application.Helpers;
@@ -37,7 +35,9 @@ internal class GetCustomerDetailQueryHandler : IRequestHandler<GetCustomerDetail
             return getCustomerDetailQueryResponse;
         }
 
-        var hasProperties = _propertyCheckerService.TypeHasProperties<CustomerDetailVm>(request.Fields);
+        var isCustomerFullDetail = request.MediaType == "vnd.wenlin.customer.full";
+
+        var hasProperties = isCustomerFullDetail ? _propertyCheckerService.TypeHasProperties<CustomerFullDetailVm>(request.Fields)  : _propertyCheckerService.TypeHasProperties<CustomerDetailVm> (request.Fields);
 
         if (!hasProperties.Key)
         {
@@ -51,7 +51,6 @@ internal class GetCustomerDetailQueryHandler : IRequestHandler<GetCustomerDetail
         }
 
         var customer = await _customerRepository.GetByIdAsync(request.Id);
-        var customerVm = _mapper.Map<CustomerDetailVm>(customer);
 
         if (customer == null)
         {
@@ -61,9 +60,13 @@ internal class GetCustomerDetailQueryHandler : IRequestHandler<GetCustomerDetail
             return getCustomerDetailQueryResponse;
         }
 
-        var hasHateoas = request.MediaType == "application/vnd.wenlin.hateoas+json";
-        getCustomerDetailQueryResponse.HasHateoas = hasHateoas;
-        getCustomerDetailQueryResponse.CustomerVm = hasHateoas ? customerVm.ShapeData(request.Fields) : customerVm;
+        object customerVm;
+        if (isCustomerFullDetail)
+            customerVm = request.IncludeLink ? _mapper.Map<CustomerFullDetailVm>(customer).ShapeData(request.Fields) : _mapper.Map<CustomerFullDetailVm>(customer);
+        else
+            customerVm = request.IncludeLink ? _mapper.Map<CustomerDetailVm>(customer).ShapeData(request.Fields) : _mapper.Map<CustomerDetailVm>(customer);
+
+        getCustomerDetailQueryResponse.CustomerVm = customerVm;
 
         return getCustomerDetailQueryResponse;
     }

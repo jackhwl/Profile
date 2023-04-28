@@ -68,6 +68,7 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"))
             .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.GetCurrentAge()));
         CreateMap<Customer, CreateCustomerCommand>().ReverseMap();
+        CreateMap<Customer, CustomerFullDetailVm>();
 
         CreateMap<Image, ImageListDto>();
         CreateMap<Image, ImageDetailDto>();

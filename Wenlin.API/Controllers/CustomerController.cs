@@ -1,5 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.Net.Http.Headers;
 using System.Text.Json;
 using Wenlin.API.Helpers;
 using Wenlin.Application.Features.Customers.Commands.CreateCustomer;
@@ -55,20 +57,26 @@ public class CustomerController : BaseController
     }
 
     [HttpGet("{id}", Name = nameof(GetCustomer))]
-    public async Task<ActionResult> GetCustomer(Guid id, string? fields)
+    public async Task<ActionResult> GetCustomer(Guid id, string? fields, [FromHeader(Name = "Accept")] string? mediaType)
     {
-        var response = await _mediator.Send(new GetCustomerDetailQuery() { Id = id, Fields = fields });
+        var mediaTypeValue = MediaTypeHeaderValue.TryParse(mediaType, out var parsedMediaType) ? parsedMediaType.MediaType.ToString() : null;
+
+        var response = await _mediator.Send(new GetCustomerDetailQuery() { Id = id, Fields = fields, MediaType = mediaTypeValue });
 
         if (!response.Success) return HandleFail(response);
 
-        // create links
-        var links = CreateLinksForCustomer(id, fields);
+        if (response.HasHateoas)
+        {
+            // create links
+            var links = CreateLinksForCustomer(id, fields);
 
-        var linkedResourceToReturn = response.CustomerExpandoDetailVm as IDictionary<string, object?>;
+            var linkedResourceToReturn = response.CustomerExpandoDetailVm as IDictionary<string, object?>;
 
-        linkedResourceToReturn.Add("links", links);
+            linkedResourceToReturn.Add("links", links);
+            return Ok(linkedResourceToReturn);
+        }
 
-        return Ok(linkedResourceToReturn);
+        return Ok(response.CustomerDetailVm);
     }
 
     [HttpPost(Name = nameof(CreateCustomer))]

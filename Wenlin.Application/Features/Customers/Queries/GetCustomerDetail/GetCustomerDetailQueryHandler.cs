@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
+//using System.Net.Http.Headers;
+using System.Net.Http;
 using Wenlin.Application.Contracts.Infrastructure;
 using Wenlin.Application.Contracts.Persistence;
 using Wenlin.Application.Helpers;
@@ -22,6 +24,18 @@ internal class GetCustomerDetailQueryHandler : IRequestHandler<GetCustomerDetail
     public async Task<GetCustomerDetailQueryResponse> Handle(GetCustomerDetailQuery request, CancellationToken cancellationToken)
     {
         var getCustomerDetailQueryResponse = new GetCustomerDetailQueryResponse();
+
+        // check if the inputted media type is a valid media type
+        if (request.MediaType == null)
+        {
+            getCustomerDetailQueryResponse.Success = false;
+            getCustomerDetailQueryResponse.ValidationErrors = new Dictionary<string, IEnumerable<string>>
+            {
+                { "MediaType", new List<string> { "Accept header media type value is not a valid media type." } }
+            };
+
+            return getCustomerDetailQueryResponse;
+        }
 
         var hasProperties = _propertyCheckerService.TypeHasProperties<CustomerDetailVm>(request.Fields);
 
@@ -48,6 +62,8 @@ internal class GetCustomerDetailQueryHandler : IRequestHandler<GetCustomerDetail
         }
 
         getCustomerDetailQueryResponse.CustomerExpandoDetailVm = customerVm.ShapeData(request.Fields);
+        getCustomerDetailQueryResponse.CustomerDetailVm = customerVm;
+        getCustomerDetailQueryResponse.HasHateoas = request.MediaType == "application/vnd.wenlin.hateoas+json";
 
         return getCustomerDetailQueryResponse;
     }

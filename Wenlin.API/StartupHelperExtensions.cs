@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Wenlin.Authorization;
+using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace Wenlin.API;
 
@@ -66,7 +67,17 @@ internal static class StartupHelperExtensions
                     ContentTypes= { "application/problem+json"}
                 };
             };
-        }) ;;
+        }) ;
+
+        builder.Services.Configure<MvcOptions>(config =>
+        {
+            var newtonsoftJsonOutputFormatter = config.OutputFormatters.OfType<NewtonsoftJsonOutputFormatter>()?.FirstOrDefault();
+
+            if (newtonsoftJsonOutputFormatter != null)
+            {
+                newtonsoftJsonOutputFormatter.SupportedMediaTypes.Add("application/vnd.wenlin.hateoas+json");
+            }
+        });
 
         //// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         //builder.Services.AddEndpointsApiExplorer();

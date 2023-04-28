@@ -70,13 +70,13 @@ public class CustomerController : BaseController
             // create links
             var links = CreateLinksForCustomer(id, fields);
 
-            var linkedResourceToReturn = response.CustomerExpandoDetailVm as IDictionary<string, object?>;
+            var linkedResourceToReturn = response.CustomerVm as IDictionary<string, object?>;
 
             linkedResourceToReturn.Add("links", links);
             return Ok(linkedResourceToReturn);
         }
 
-        return Ok(response.CustomerDetailVm);
+        return Ok(response.CustomerVm);
     }
 
     [HttpPost(Name = nameof(CreateCustomer))]

@@ -1,5 +1,5 @@
 ﻿namespace Wenlin.Application.Features.Customers.Queries.GetCustomerDetail;
-public class CustomerDetailVm
+public class CustomerDetailVm : ICustomerDetail
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;

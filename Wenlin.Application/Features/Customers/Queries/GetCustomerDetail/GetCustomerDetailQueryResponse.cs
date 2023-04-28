@@ -1,5 +1,4 @@
-﻿using System.Dynamic;
-using Wenlin.Application.Responses;
+﻿using Wenlin.Application.Responses;
 
 namespace Wenlin.Application.Features.Customers.Queries.GetCustomerDetail;
 public class GetCustomerDetailQueryResponse : BaseResponse
@@ -8,7 +7,8 @@ public class GetCustomerDetailQueryResponse : BaseResponse
     {
 
     }
-    public ExpandoObject CustomerExpandoDetailVm { get; set; } = default!;
-    public CustomerDetailVm CustomerDetailVm { get; set; } = default!;
+    //public ExpandoObject CustomerExpandoDetailVm { get; set; } = default!;
+    //public CustomerDetailVm CustomerDetailVm { get; set; } = default!;
+    public object CustomerVm { get; set; } = default!;
     public bool HasHateoas { get; set; } = false;
 }

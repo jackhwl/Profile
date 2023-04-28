@@ -61,9 +61,9 @@ internal class GetCustomerDetailQueryHandler : IRequestHandler<GetCustomerDetail
             return getCustomerDetailQueryResponse;
         }
 
-        getCustomerDetailQueryResponse.CustomerExpandoDetailVm = customerVm.ShapeData(request.Fields);
-        getCustomerDetailQueryResponse.CustomerDetailVm = customerVm;
-        getCustomerDetailQueryResponse.HasHateoas = request.MediaType == "application/vnd.wenlin.hateoas+json";
+        var hasHateoas = request.MediaType == "application/vnd.wenlin.hateoas+json";
+        getCustomerDetailQueryResponse.HasHateoas = hasHateoas;
+        getCustomerDetailQueryResponse.CustomerVm = hasHateoas ? customerVm.ShapeData(request.Fields) : customerVm;
 
         return getCustomerDetailQueryResponse;
     }

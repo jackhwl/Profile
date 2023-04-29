@@ -1,13 +1,13 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Net.Http.Headers;
 using System.Text.Json;
 using Wenlin.API.ActionConstraints;
 using Wenlin.API.Helpers;
 using Wenlin.Application.Features.Customers.Commands.CreateCustomer;
 using Wenlin.Application.Features.Customers.Commands.CreateCustomerWithDateOfDeath;
-using Wenlin.Application.Features.Customers.Queries.GetCustomerDetail;
 using Wenlin.Application.Features.Customers.Queries.GetCustomersList;
+using Wenlin.Application.Features.Customers.Queries.GetCustomerWithLinks;
+using Wenlin.Application.Features.Customers.Queries.GetCustomerWithoutLinks;
 
 namespace Wenlin.API.Controllers;
 
@@ -57,41 +57,101 @@ public class CustomerController : BaseController
         return Ok(linkedCollectionResource);
     }
 
-    [Produces("application/json", "application/vnd.wenlin.hateoas+json"
-       , "application/vnd.wenlin.hateoas+json"
-       , "application/vnd.wenlin.customer.full+json"
-       , "application/vnd.wenlin.customer.full.hateoas+json"
-       , "application/vnd.wenlin.customer.friendly+json"
-       , "application/vnd.wenlin.customer.friendly.hateoas+json"
-       )]
-    [HttpGet("{id}", Name = nameof(GetCustomer))]
-    public async Task<ActionResult> GetCustomer(Guid id, string? fields, [FromHeader(Name = "Accept")] string? mediaType)
+    [RequestHeaderMatchesMediaType("Accept", "application/json", "application/vnd.wenlin.customer.friendly+json")]
+    [Produces("application/json", "application/vnd.wenlin.customer.friendly+json")]
+    [HttpGet("{id}", Name = "GetCustomer")]
+    public async Task<ActionResult> GetCustomerWithoutLinks(Guid id, string? fields)
     {
-        string? mediaTypeValue = null;
-        var includeLink = false;
-        if (MediaTypeHeaderValue.TryParse(mediaType, out var parsedMediaType))
-        {
-            includeLink = parsedMediaType!.SubTypeWithoutSuffix.EndsWith("hateoas", StringComparison.InvariantCultureIgnoreCase);
-            mediaTypeValue = includeLink ? parsedMediaType.SubTypeWithoutSuffix.Substring(0, parsedMediaType.SubTypeWithoutSuffix.Length - 8) : parsedMediaType.SubTypeWithoutSuffix.Value;
-        }
-
-        var response = await _mediator.Send(new GetCustomerDetailQuery() { Id = id, Fields = fields, MediaType = mediaTypeValue, IncludeLink = includeLink });
+        var response = await _mediator.Send(new GetCustomerWithoutLinksQuery() { Id = id, Fields = fields });
 
         if (!response.Success) return HandleFail(response);
 
-        if (includeLink)
-        {
-            // create links
-            var links = CreateLinksForCustomer(id, fields);
+        return Ok(response.CustomerVm);
+    }
 
-            var linkedResourceToReturn = response.CustomerVm as IDictionary<string, object?>;
+    [RequestHeaderMatchesMediaType("Accept", "application/vnd.wenlin.hateoas+json", "application/vnd.wenlin.customer.friendly.hateoas+json")]
+    [Produces("application/vnd.wenlin.hateoas+json", "application/vnd.wenlin.customer.friendly.hateoas+json")]
+    [HttpGet("{id}")]
+    public async Task<ActionResult> GetCustomerWithLinks(Guid id, string? fields)
+    {
+        var response = await _mediator.Send(new GetCustomerWithoutLinksQuery() { Id = id, Fields = fields });
 
-            linkedResourceToReturn!.Add("links", links);
-            return Ok(linkedResourceToReturn);
-        }
+        if (!response.Success) return HandleFail(response);
+
+        var links = CreateLinksForCustomer(id, fields);
+
+        var linkedResourceToReturn = response.CustomerVm as IDictionary<string, object?>;
+
+        linkedResourceToReturn!.Add("links", links);
+
+        return Ok(linkedResourceToReturn);
+    }
+
+    [RequestHeaderMatchesMediaType("Accept", "application/vnd.wenlin.customer.full+json")]
+    [Produces("application/vnd.wenlin.customer.full+json")]
+    [HttpGet("{id}", Name = "GetCustomer")]
+    public async Task<ActionResult> GetFullCustomerWithoutLinks(Guid id, string? fields)
+    {
+        var response = await _mediator.Send(new GetFullCustomerWithoutLinksQuery() { Id = id, Fields = fields });
+
+        if (!response.Success) return HandleFail(response);
 
         return Ok(response.CustomerVm);
     }
+
+    [RequestHeaderMatchesMediaType("Accept", "application/vnd.wenlin.customer.full.hateoas+json")]
+    [Produces("application/vnd.wenlin.customer.full.hateoas+json")]
+    [HttpGet("{id}")]
+    public async Task<ActionResult> GetFullCustomerWithLinks(Guid id, string? fields)
+    {
+        var response = await _mediator.Send(new GetFullCustomerWithoutLinksQuery() { Id = id, Fields = fields });
+
+        if (!response.Success) return HandleFail(response);
+
+        var links = CreateLinksForCustomer(id, fields);
+
+        var linkedResourceToReturn = response.CustomerVm as IDictionary<string, object?>;
+
+        linkedResourceToReturn!.Add("links", links);
+
+        return Ok(linkedResourceToReturn);
+    }
+
+    //[Produces("application/json", "application/vnd.wenlin.hateoas+json"
+    //   , "application/vnd.wenlin.hateoas+json"
+    //   , "application/vnd.wenlin.customer.full+json"
+    //   , "application/vnd.wenlin.customer.full.hateoas+json"
+    //   , "application/vnd.wenlin.customer.friendly+json"
+    //   , "application/vnd.wenlin.customer.friendly.hateoas+json"
+    //   )]
+    //[HttpGet("{id}", Name = nameof(GetCustomer))]
+    //public async Task<ActionResult> GetCustomer(Guid id, string? fields, [FromHeader(Name = "Accept")] string? mediaType)
+    //{
+    //    string? mediaTypeValue = null;
+    //    var includeLink = false;
+    //    if (MediaTypeHeaderValue.TryParse(mediaType, out var parsedMediaType))
+    //    {
+    //        includeLink = parsedMediaType!.SubTypeWithoutSuffix.EndsWith("hateoas", StringComparison.InvariantCultureIgnoreCase);
+    //        mediaTypeValue = includeLink ? parsedMediaType.SubTypeWithoutSuffix.Substring(0, parsedMediaType.SubTypeWithoutSuffix.Length - 8) : parsedMediaType.SubTypeWithoutSuffix.Value;
+    //    }
+
+    //    var response = await _mediator.Send(new GetCustomerDetailQuery() { Id = id, Fields = fields, MediaType = mediaTypeValue, IncludeLink = includeLink });
+
+    //    if (!response.Success) return HandleFail(response);
+
+    //    if (includeLink)
+    //    {
+    //        // create links
+    //        var links = CreateLinksForCustomer(id, fields);
+
+    //        var linkedResourceToReturn = response.CustomerVm as IDictionary<string, object?>;
+
+    //        linkedResourceToReturn!.Add("links", links);
+    //        return Ok(linkedResourceToReturn);
+    //    }
+
+    //    return Ok(response.CustomerVm);
+    //}
 
 
     [HttpPost(Name = nameof(CreateCustomerWithDateOfDeath))]

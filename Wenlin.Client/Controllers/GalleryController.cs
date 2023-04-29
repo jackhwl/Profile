@@ -128,4 +128,92 @@ public class GalleryController : Controller
         _logger.LogInformation($"Identity token & user claims: " + $"\n{identityToken} \n{userClaimsStringBuilder}");
         _logger.LogInformation($"Access token: " + $"\n{accessToken}");
     }
+
+    public async Task<IActionResult> EditImage(Guid id)
+    {
+
+        var httpClient = _httpClientFactory.CreateClient("APIClient");
+
+        var request = new HttpRequestMessage(
+            HttpMethod.Get,
+            $"/api/images/{id}");
+
+        var response = await httpClient.SendAsync(
+            request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+
+        response.EnsureSuccessStatusCode();
+
+        using (var responseStream = await response.Content.ReadAsStreamAsync())
+        {
+            var deserializedImage = await JsonSerializer.DeserializeAsync<Image>(responseStream,
+        new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        });
+
+            if (deserializedImage == null)
+            {
+                throw new Exception("Deserialized image must not be null.");
+            }
+
+            var editImageViewModel = new EditImageViewModel()
+            {
+                Id = deserializedImage.Id,
+                Title = deserializedImage.Title
+            };
+
+            return View(editImageViewModel);
+        }
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> EditImage(EditImageViewModel editImageViewModel)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View();
+        }
+
+        // create an ImageForUpdate instance
+        var imageForUpdate = new ImageForUpdate(editImageViewModel.Title);
+
+        // serialize it
+        var serializedImageForUpdate = JsonSerializer.Serialize(imageForUpdate);
+
+        var httpClient = _httpClientFactory.CreateClient("APIClient");
+
+        var request = new HttpRequestMessage(
+            HttpMethod.Put,
+            $"/api/images/{editImageViewModel.Id}")
+        {
+            Content = new StringContent(
+                serializedImageForUpdate,
+                System.Text.Encoding.Unicode,
+                "application/json")
+        };
+
+        var response = await httpClient.SendAsync(
+            request, HttpCompletionOption.ResponseHeadersRead);
+
+        response.EnsureSuccessStatusCode();
+
+        return RedirectToAction("Index");
+    }
+
+    public async Task<IActionResult> DeleteImage(Guid id)
+    {
+        var httpClient = _httpClientFactory.CreateClient("APIClient");
+
+        var request = new HttpRequestMessage(
+            HttpMethod.Delete,
+            $"/api/images/{id}");
+
+        var response = await httpClient.SendAsync(
+            request, HttpCompletionOption.ResponseHeadersRead);
+
+        response.EnsureSuccessStatusCode();
+
+        return RedirectToAction("Index");
+    }
 }

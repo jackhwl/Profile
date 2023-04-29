@@ -12,12 +12,15 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
             .IsRequired()
             .HasMaxLength(50);
         builder
-            .Property(p => p.FirstName)
+            .Property(p => p.LastName)
             .IsRequired()
             .HasMaxLength(50);
         builder
             .Property(p => p.DateOfBirth)  
             .IsRequired();
+        builder
+            .Property(p => p.DateOfDeath)
+        ;
         builder
             .Property(p => p.MainCategory)
             .IsRequired()

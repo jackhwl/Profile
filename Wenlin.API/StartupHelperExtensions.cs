@@ -1,19 +1,17 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Wenlin.Application;
+using Wenlin.Authorization;
 using Wenlin.Infrastructure;
 using Wenlin.Persistence;
-using System.Diagnostics;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Wenlin.Authorization;
-using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace Wenlin.API;
 
@@ -48,6 +46,17 @@ internal static class StartupHelperExtensions
         {
             setupAction.InvalidModelStateResponseFactory = context =>
             {
+                //            ValidationProblemDetails error = context.ModelState
+                //.Where(e => e.Value.Errors.Count > 0)
+                //.Select(e => new ValidationProblemDetails(context.ModelState)).FirstOrDefault();
+
+                //            // Here you can add logging to you log file or to your Application Insights.
+                //            // For example, using Serilog:
+                //            // Log.Error($"{{@RequestPath}} received invalid message format: {{@Exception}}", 
+                //            //   actionContext.HttpContext.Request.Path.Value, 
+                //            //   error.Errors.Values);
+                //            return new BadRequestObjectResult(error);
+
                 // create a validation problem details object
                 var problemDetailsFactory = context.HttpContext.RequestServices.GetRequiredService<ProblemDetailsFactory>();
 
@@ -58,13 +67,13 @@ internal static class StartupHelperExtensions
                 validationProblemDetails.Instance = context.HttpContext.Request.Path;
 
                 // report invalid model state responses as validation issues
-                validationProblemDetails.Type = "https://courselibrary.com/modelvalidationproblem";
+                validationProblemDetails.Type = "https://wenlin.net/modelvalidationproblem";
                 validationProblemDetails.Status = StatusCodes.Status422UnprocessableEntity;
-                validationProblemDetails.Title = "One or more validation errors occurred.";
+                validationProblemDetails.Title = "One1 or more validation errors occurred.";
 
-                return new UnprocessableEntityObjectResult(validationProblemDetails) 
-                { 
-                    ContentTypes= { "application/problem+json"}
+                return new UnprocessableEntityObjectResult(validationProblemDetails)
+                {
+                    ContentTypes = { "application/problem+json" }
                 };
             };
         }) ;
@@ -131,9 +140,9 @@ internal static class StartupHelperExtensions
             //        var errorFeature = context.Features.Get<IExceptionHandlerFeature>();
             //        var exception = errorFeature.Error;
 
-            //        var problemDetails = new ProblemDetails 
-            //        { 
-            //            Instance = $"urn:myorganization:error:{Guid.NewGuid()}" 
+            //        var problemDetails = new ProblemDetails
+            //        {
+            //            Instance = $"urn:myorganization:error:{Guid.NewGuid()}"
             //        };
 
             //        if (exception is BadHttpRequestException badHttpRequestException)

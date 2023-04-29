@@ -6,6 +6,7 @@ using Wenlin.Application.Features.Categories.Queries.GetCategoriesWithProducts;
 using Wenlin.Application.Features.Categories.Queries.GetCategoryCollection;
 using Wenlin.Application.Features.Categories.Queries.GetCategoryDetail;
 using Wenlin.Application.Features.Customers.Commands.CreateCustomer;
+using Wenlin.Application.Features.Customers.Commands.CreateCustomerWithDateOfDeath;
 using Wenlin.Application.Features.Customers.Queries.GetCustomerDetail;
 using Wenlin.Application.Features.Customers.Queries.GetCustomersList;
 using Wenlin.Application.Features.Images.Commands.CreateImage;
@@ -60,14 +61,18 @@ public class MappingProfile : Profile
 
         CreateMap<Customer, CustomerListDto>()
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"))
-            .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.GetCurrentAge()));
+            .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.GetCurrentAge(src.DateOfDeath)));
         CreateMap<Customer, CustomerDetailVm>()
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"))
-            .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.GetCurrentAge()));
+            .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.GetCurrentAge(src.DateOfDeath)));
         CreateMap<Customer, CreateCustomerDto>()
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"))
-            .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.GetCurrentAge()));
+            .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.GetCurrentAge(src.DateOfDeath)));
+        CreateMap<Customer, CreateCustomerWithDateOfDeathDto>()
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"))
+            .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.GetCurrentAge(src.DateOfDeath)));
         CreateMap<Customer, CreateCustomerCommand>().ReverseMap();
+        CreateMap<Customer, CreateCustomerWithDateOfDeathCommand>().ReverseMap();
         CreateMap<Customer, CustomerFullDetailVm>();
 
         CreateMap<Image, ImageListDto>();

@@ -1,10 +1,11 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Net.Http.Headers;
 using System.Text.Json;
+using Wenlin.API.ActionConstraints;
 using Wenlin.API.Helpers;
 using Wenlin.Application.Features.Customers.Commands.CreateCustomer;
+using Wenlin.Application.Features.Customers.Commands.CreateCustomerWithDateOfDeath;
 using Wenlin.Application.Features.Customers.Queries.GetCustomerDetail;
 using Wenlin.Application.Features.Customers.Queries.GetCustomersList;
 
@@ -92,7 +93,26 @@ public class CustomerController : BaseController
         return Ok(response.CustomerVm);
     }
 
+
+    [HttpPost(Name = nameof(CreateCustomerWithDateOfDeath))]
+    [RequestHeaderMatchesMediaType("Content-Type", "application/vnd.wenlin.customerforcreationwithdateofdeath+json")]
+    [Consumes("application/vnd.wenlin.customerforcreationwithdateofdeath+json")]
+    public async Task<ActionResult> CreateCustomerWithDateOfDeath(CreateCustomerWithDateOfDeathCommand createCustomerCommand)
+    {
+        var response = await _mediator.Send(createCustomerCommand);
+
+        if (!response.Success) return HandleFail(response);
+
+        var linkedResourceToReturn = response.CreateCustomerWithDateOfDeathExpandoObject as IDictionary<string, object?>;
+        var links = CreateLinksForCustomer((Guid)linkedResourceToReturn["Id"]!, null);
+        linkedResourceToReturn.Add("links", links);
+
+        return CreatedAtRoute("GetCustomer", new { id = linkedResourceToReturn["Id"] }, linkedResourceToReturn);
+    }
+
     [HttpPost(Name = nameof(CreateCustomer))]
+    [RequestHeaderMatchesMediaType("Content-Type", "application/json", "application/vnd.wenlin.customerforcreation+json")]
+    [Consumes("application/json", "application/vnd.wenlin.customerforcreation+json")]
     public async Task<ActionResult> CreateCustomer(CreateCustomerCommand createCustomerCommand)
     {
         var response = await _mediator.Send(createCustomerCommand);
@@ -165,5 +185,12 @@ public class CustomerController : BaseController
         //links.Add(new(Url.Link("GetCoursesForCustomer", new { id }), "courses", "GET"));
 
         return links;
+    }
+
+    [HttpOptions]
+    public IActionResult GetCustomerOptions()
+    {
+        Response.Headers.Add("Allow", "GET,HEAD,POST,OPTIONS");
+        return Ok();
     }
 }

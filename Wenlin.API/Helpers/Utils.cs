@@ -13,7 +13,7 @@ internal static class Utils
         validationProblemDetails.Instance = instance;
 
         // report invalid model state responses as validation issues
-        validationProblemDetails.Type = "https://courselibrary.com/modelvalidationproblem";
+        validationProblemDetails.Type = "https://wenlin.com/modelvalidationproblem";
         validationProblemDetails.Status = StatusCodes.Status422UnprocessableEntity;
         validationProblemDetails.Title = "One or more validation errors occurred.";
 
@@ -28,7 +28,7 @@ internal static class Utils
         problemDetails.Detail = errorMessage;
         problemDetails.Instance = instance;
 
-        problemDetails.Type = "https://courselibrary.com/modelvalidationproblem";
+        problemDetails.Type = "https://wenlin.com/modelvalidationproblem";
         problemDetails.Status = StatusCodes.Status500InternalServerError;
         problemDetails.Title = "One or more errors occurred.";
 

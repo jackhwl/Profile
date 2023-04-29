@@ -30,6 +30,7 @@ public class ImagesController : BaseController
     }
 
     [HttpGet("{id}", Name = "GetImage")]
+    [Authorize("MustOwnImage")]
     public async Task<ActionResult<ImageDetailDto>> GetImage(Guid id)
     {
         var response = await _mediator.Send(new GetImageDetailQuery() { Id = id});
@@ -57,6 +58,7 @@ public class ImagesController : BaseController
     }
 
     [HttpDelete("{id}")]
+    [Authorize("MustOwnImage")]
     public async Task<IActionResult> DeleteImage(Guid id)
     {
         var response = await _mediator.Send(new DeleteImageCommand() { Id = id });
@@ -67,6 +69,7 @@ public class ImagesController : BaseController
     }
 
     [HttpPut("{id}")]
+    [Authorize("MustOwnImage")]
     public async Task<IActionResult> UpdateImage(Guid id, UpdateImageCommand updateImageCommand)
     {
         updateImageCommand.Id = id;

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -8,6 +9,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using Wenlin.API.Authorization;
 using Wenlin.Application;
 using Wenlin.Authorization;
 using Wenlin.Infrastructure;
@@ -32,6 +34,8 @@ internal static class StartupHelperExtensions
         builder.Services.AddApplicationServices();
         builder.Services.AddInfrastructureServices(emailSettings);
         builder.Services.AddPersistenceServices(connectionString);
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddScoped<IAuthorizationHandler, MustOwnImageHandler>();
 
         builder.Services.AddControllers(configure =>
         {
@@ -119,6 +123,11 @@ internal static class StartupHelperExtensions
             authorizationOptions.AddPolicy("ClientApplicationCanWrite", policyBuilder =>
             {
                 policyBuilder.RequireClaim("scope", "wenlincoreapi.write");
+            });
+            authorizationOptions.AddPolicy("MustOwnImage", policyBuilder =>
+            {
+                policyBuilder.RequireAuthenticatedUser();
+                policyBuilder.AddRequirements(new MustOwnImageRequirement());
             });
         });
 

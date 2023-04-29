@@ -14,4 +14,9 @@ public class ImageRepository : BaseRepository<Image>, IImageRepository
             .Where(i => i.OwnerId == ownerId)
             .OrderBy(i => i.Title).ToListAsync();
     }
+    public async Task<bool> IsImageOwnerAsync(Guid id, Guid ownerId)
+    {
+        return await _dbContext.Set<Image>()
+            .AnyAsync(i => i.Id == id && i.OwnerId == ownerId);
+    }
 }

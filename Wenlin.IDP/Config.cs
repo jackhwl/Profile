@@ -40,6 +40,9 @@ public static class Config
                 ClientName= "Wenlin Core Image Gallery",
                 ClientId= "wenlincoreclient",
                 AllowedGrantTypes = GrantTypes.Code,
+                AccessTokenLifetime = 120, // 2 min
+                // AuthorizationCodeLifetime = ...
+                // IdentityTokenLifetime = ...
                 RedirectUris =
                 {
                     "https://localhost:7012/signin-oidc"

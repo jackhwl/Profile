@@ -118,6 +118,9 @@ public class GalleryController : Controller
         // get the saved access token
         var accessToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
 
+        // get the refresh token
+        var refreshToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken);
+
         var userClaimsStringBuilder = new StringBuilder();
         foreach (var claim in User.Claims)
         {
@@ -127,6 +130,7 @@ public class GalleryController : Controller
         // log token & claims
         _logger.LogInformation($"Identity token & user claims: " + $"\n{identityToken} \n{userClaimsStringBuilder}");
         _logger.LogInformation($"Access token: " + $"\n{accessToken}");
+        _logger.LogInformation($"Refresh token: " + $"\n{refreshToken}");
     }
 
     public async Task<IActionResult> EditImage(Guid id)

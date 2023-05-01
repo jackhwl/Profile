@@ -52,13 +52,13 @@ public class AuthenticationController : Controller
         {
             throw new Exception(refreshTokenRevocationResponse.Error);
         }
-        
-        //// clears the local cookie
-        //await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-        //// Redirects to the IDP linked to scheme "OpenIdConnectDefaults.AuthenticationScheme" (oidc)
-        //// so it can clear its own session/cookie
-        //await HttpContext.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme);
+        // clears the local cookie
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+        // Redirects to the IDP linked to scheme "OpenIdConnectDefaults.AuthenticationScheme" (oidc)
+        // so it can clear its own session/cookie
+        await HttpContext.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme);
     }
 
     public IActionResult AccessDenied()

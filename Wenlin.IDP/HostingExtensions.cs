@@ -2,6 +2,7 @@ using Marvin.IDP.DbContexts;
 using Marvin.IDP.Services;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using Wenlin.IDP.Services;
 
 namespace Wenlin.IDP;
 
@@ -24,6 +25,7 @@ internal static class HostingExtensions
                 // https://docs.duendesoftware.com/identityserver/v6/fundamentals/resources/api_scopes#authorization-based-on-scopes
                 options.EmitStaticAudienceClaim = true;
             })
+            .AddProfileService<LocalUserProfileService>()
             .AddInMemoryIdentityResources(Config.IdentityResources)
             .AddInMemoryApiScopes(Config.ApiScopes)
             .AddInMemoryApiResources(Config.ApiResources)

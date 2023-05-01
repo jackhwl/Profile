@@ -105,25 +105,25 @@ internal static class StartupHelperExtensions
 
         JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            //.AddJwtBearer(options =>
-            //{
-            //    options.Authority = "https://localhost:5003";
-            //    options.Audience = "wenlincoreapi";
-            //    options.TokenValidationParameters = new()
-            //    {
-            //        NameClaimType = "given_name",
-            //        RoleClaimType = "role",
-            //        ValidTypes = new[] { "at+jwt" }
-            //    };
-            //});
-            .AddOAuth2Introspection(options =>
+            .AddJwtBearer(options =>
             {
-                options.Authority = "https//localhost:5003";
-                options.ClientId = "wenlincoreapi";
-                options.ClientSecret = "apisecret";
-                options.NameClaimType = "given_name";
-                options.RoleClaimType = "role";
+                options.Authority = "https://localhost:5003";
+                options.Audience = "wenlincoreapi";
+                options.TokenValidationParameters = new()
+                {
+                    NameClaimType = "given_name",
+                    RoleClaimType = "role",
+                    ValidTypes = new[] { "at+jwt" }
+                };
             });
+            //.AddOAuth2Introspection(options =>
+            //{
+            //    options.Authority = "https//localhost:5003";
+            //    options.ClientId = "wenlincoreapi";
+            //    options.ClientSecret = "apisecret";
+            //    options.NameClaimType = "given_name";
+            //    options.RoleClaimType = "role";
+            //});
 
         builder.Services.AddAuthorization(authorizationOptions =>
         {

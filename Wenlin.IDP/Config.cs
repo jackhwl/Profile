@@ -41,7 +41,7 @@ public static class Config
                 ClientName= "Wenlin Core Image Gallery",
                 ClientId= "wenlincoreclient",
                 AllowedGrantTypes = GrantTypes.Code,
-                AccessTokenType = AccessTokenType.Reference,
+                //AccessTokenType = AccessTokenType.Reference,
                 AllowOfflineAccess = true,
                 UpdateAccessTokenClaimsOnRefresh = true,
                 AccessTokenLifetime = 120, // 2 min

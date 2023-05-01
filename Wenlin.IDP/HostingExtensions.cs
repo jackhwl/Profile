@@ -1,3 +1,5 @@
+using Marvin.IDP.DbContexts;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 namespace Wenlin.IDP;
@@ -8,6 +10,11 @@ internal static class HostingExtensions
     {
         // uncomment if you want to add a UI
         builder.Services.AddRazorPages();
+
+        builder.Services.AddDbContext<IdentityDbContext>(options =>
+        {
+            options.UseSqlServer(builder.Configuration.GetConnectionString("WenlinIdentityDBConnectionString"));
+        });
 
         builder.Services.AddIdentityServer(options =>
             {

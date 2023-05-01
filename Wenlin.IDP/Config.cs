@@ -20,7 +20,8 @@ public static class Config
             {
                 new ApiResource("wenlincoreapi", "Wenlin Image Gallery API", new [] { "role", "country"  })
                 {
-                    Scopes = { "wenlincoreapi.fullaccess", "wenlincoreapi.read", "wenlincoreapi.write" }
+                    Scopes = { "wenlincoreapi.fullaccess", "wenlincoreapi.read", "wenlincoreapi.write" },
+                    ApiSecrets = { new Secret("apisecret".Sha256()) }
                 }
             };
 
@@ -40,6 +41,7 @@ public static class Config
                 ClientName= "Wenlin Core Image Gallery",
                 ClientId= "wenlincoreclient",
                 AllowedGrantTypes = GrantTypes.Code,
+                AccessTokenType = AccessTokenType.Reference,
                 AllowOfflineAccess = true,
                 UpdateAccessTokenClaimsOnRefresh = true,
                 AccessTokenLifetime = 120, // 2 min

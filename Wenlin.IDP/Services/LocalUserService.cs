@@ -1,18 +1,19 @@
 ﻿using Wenlin.IDP.DbContexts;
 using Wenlin.IDP.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace Wenlin.IDP.Services
 {
     public class LocalUserService : ILocalUserService
     {
         private readonly IdentityDbContext _context;
+        private readonly IPasswordHasher<User> _passwordHasher;
 
-        public LocalUserService(
-            IdentityDbContext context)
+        public LocalUserService(IdentityDbContext context, IPasswordHasher<User> passwordHasher)
         {
-            _context = context ??
-                throw new ArgumentNullException(nameof(context));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _passwordHasher = passwordHasher ?? throw new ArgumentNullException(nameof(passwordHasher));
         }
 
         public async Task<bool> IsUserActive(string subject)
@@ -54,8 +55,10 @@ namespace Wenlin.IDP.Services
             }
 
             // Validate credentials
-            return (user.Password == password);
-        } 
+            // return (user.Password == password);
+            var verificationResult = _passwordHasher.VerifyHashedPassword(user, user.Password, password);
+            return (verificationResult == PasswordVerificationResult.Success);
+        }
 
         public async Task<User> GetUserByUserNameAsync(string userName)
         {
@@ -88,7 +91,7 @@ namespace Wenlin.IDP.Services
             return await _context.Users.FirstOrDefaultAsync(u => u.Subject == subject);
         }
 
-        public void AddUser(User userToAdd)
+        public void AddUser(User userToAdd, string password)
         {
             if (userToAdd == null)
             {
@@ -101,6 +104,9 @@ namespace Wenlin.IDP.Services
                 // return this as a validation issue
                 throw new Exception("Username must be unique");
             }
+
+            // hash & salt the password
+            userToAdd.Password = _passwordHasher.HashPassword(userToAdd, password);
 
             _context.Users.Add(userToAdd);
         }

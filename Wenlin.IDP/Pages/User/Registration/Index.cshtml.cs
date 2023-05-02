@@ -49,7 +49,6 @@ public class IndexModel : PageModel
         // create user & claims
         var userToCreate = new Entities.User
         {
-            Password = Input.Password,
             UserName = Input.UserName,
             Subject = Guid.NewGuid().ToString(),
             Active = true
@@ -73,7 +72,7 @@ public class IndexModel : PageModel
             Value = Input.FamilyName
         });
 
-        _localUserService.AddUser(userToCreate);
+        _localUserService.AddUser(userToCreate, Input.Password);
         await _localUserService.SaveChangesAsync();
 
         // Issue authentication cookie (log the user in)

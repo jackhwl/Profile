@@ -2,6 +2,7 @@ using Wenlin.IDP.DbContexts;
 using Wenlin.IDP.Services;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using Microsoft.AspNetCore.Identity;
 
 namespace Wenlin.IDP;
 
@@ -12,6 +13,7 @@ internal static class HostingExtensions
         // uncomment if you want to add a UI
         builder.Services.AddRazorPages();
 
+        builder.Services.AddScoped<IPasswordHasher<Entities.User>, PasswordHasher<Entities.User>>();
         builder.Services.AddScoped<ILocalUserService, LocalUserService>();
 
         builder.Services.AddDbContext<IdentityDbContext>(options =>

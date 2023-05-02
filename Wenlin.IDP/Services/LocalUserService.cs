@@ -2,6 +2,7 @@
 using Wenlin.IDP.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using System.Security.Cryptography;
 
 namespace Wenlin.IDP.Services
 {
@@ -106,12 +107,39 @@ namespace Wenlin.IDP.Services
             }
 
             // hash & salt the password
+            if (_context.Users.Any(u => u.Email == userToAdd.Email))
+            {
+                throw new Exception("Email must be unique");
+            }
+
+            userToAdd.SecurityCode = Convert.ToBase64String(RandomNumberGenerator.GetBytes(128));
+            userToAdd.SecurityCodeExpirationDate = DateTime.UtcNow.AddHours(1);
+
             userToAdd.Password = _passwordHasher.HashPassword(userToAdd, password);
 
             _context.Users.Add(userToAdd);
         }
 
-  
+        public async Task<bool> ActivateUserAsync(string securityCode)
+        {
+            if (string.IsNullOrWhiteSpace(securityCode))
+            {
+                throw new ArgumentNullException(nameof(securityCode));
+            }
+
+            // find an user with this security code as an active security code.
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.SecurityCode == securityCode && u.SecurityCodeExpirationDate >= DateTime.UtcNow);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            user.Active = true;
+            user.SecurityCode = null;
+            return true;
+        }
+
         public async Task<bool> SaveChangesAsync()
         {
             return (await _context.SaveChangesAsync() > 0);

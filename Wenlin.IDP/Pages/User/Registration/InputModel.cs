@@ -32,6 +32,12 @@ public class InputModel
     [Display(Name = "Country")]
     public string Country { get; set; }
 
+    [Required]
+    [MaxLength(200)]
+    [Display(Name = "Email")]
+    [EmailAddress]
+    public string Email { get; set; }
+
     public SelectList CountryCodes { get; set; } =
         new(new[] {
                     new { Id = "be", Value = "Belgium" },

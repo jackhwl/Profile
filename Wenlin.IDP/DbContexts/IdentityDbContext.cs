@@ -34,6 +34,7 @@ namespace Wenlin.IDP.DbContexts
                     Password = "password",
                     Subject = "d860efca-22d9-47fd-8249-791ba61b07c7",
                     UserName = "David",
+                    Email = "david@hotmail.com",
                     Active = true
                 },
                 new User()
@@ -41,6 +42,7 @@ namespace Wenlin.IDP.DbContexts
                     Id = new Guid("96053525-f4a5-47ee-855e-0ea77fa6c55a"),
                     Password = "password",
                     Subject = "b7539694-97e7-4dfe-84da-b4256e1ff5c7",
+                    Email = "emma@hotmail.com",
                     UserName = "Emma",
                     Active = true
                 });

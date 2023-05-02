@@ -1,7 +1,7 @@
 ﻿using Duende.IdentityServer.Extensions;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
-using Marvin.IDP.Services;
+using Wenlin.IDP.Services;
 using System.Security.Claims;
 
 namespace Wenlin.IDP.Services;

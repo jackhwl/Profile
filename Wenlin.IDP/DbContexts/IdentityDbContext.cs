@@ -1,7 +1,7 @@
-﻿using Marvin.IDP.Entities;
+﻿using Wenlin.IDP.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Marvin.IDP.DbContexts
+namespace Wenlin.IDP.DbContexts
 {
     public class IdentityDbContext : DbContext
     {

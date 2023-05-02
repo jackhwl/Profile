@@ -1,8 +1,8 @@
-﻿using Marvin.IDP.DbContexts;
-using Marvin.IDP.Entities;
+﻿using Wenlin.IDP.DbContexts;
+using Wenlin.IDP.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Marvin.IDP.Services
+namespace Wenlin.IDP.Services
 {
     public class LocalUserService : ILocalUserService
     {

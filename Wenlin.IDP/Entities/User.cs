@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Marvin.IDP.Entities
+namespace Wenlin.IDP.Entities
 {
     public class User : IConcurrencyAware
     {

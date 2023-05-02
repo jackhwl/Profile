@@ -1,4 +1,4 @@
-﻿namespace Marvin.IDP.Entities
+﻿namespace Wenlin.IDP.Entities
 {
     public interface IConcurrencyAware
     {

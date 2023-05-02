@@ -1,6 +1,6 @@
-﻿using Marvin.IDP.Entities;
+﻿using Wenlin.IDP.Entities;
 
-namespace Marvin.IDP.Services
+namespace Wenlin.IDP.Services
 {
     public interface ILocalUserService
     {

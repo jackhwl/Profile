@@ -16,6 +16,7 @@ public class ProductController : BaseController
 {
     public ProductController(IMediator mediator): base(mediator) { }
 
+    [ResponseCache(Duration = 120)]
     [HttpGet("{id}", Name = "GetProductById")]
     public async Task<ActionResult<ProductDetailVm>> GetProductById(Guid categoryId, Guid id)
     {

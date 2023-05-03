@@ -16,7 +16,6 @@ public class ProductController : BaseController
 {
     public ProductController(IMediator mediator): base(mediator) { }
 
-    [ResponseCache(Duration = 120)]
     [HttpGet("{id}", Name = "GetProductById")]
     public async Task<ActionResult<ProductDetailVm>> GetProductById(Guid categoryId, Guid id)
     {
@@ -33,6 +32,7 @@ public class ProductController : BaseController
 
     [HttpGet]
     [HttpHead]
+    [ResponseCache(Duration = 120)]
     public async Task<ActionResult<List<ProductListVm>>> GetProducts(Guid categoryId)
     {
         var request = new GetProductsListQuery() { CategoryId = categoryId };

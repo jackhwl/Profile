@@ -139,6 +139,8 @@ internal static class StartupHelperExtensions
             });
         });
 
+        builder.Services.AddResponseCaching();
+
         return builder.Build();
     }
 
@@ -205,6 +207,8 @@ internal static class StartupHelperExtensions
         }
 
         app.UseHttpsRedirection();
+
+        app.UseResponseCaching();
 
         app.UseAuthentication();
 

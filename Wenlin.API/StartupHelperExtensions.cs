@@ -40,6 +40,7 @@ internal static class StartupHelperExtensions
         builder.Services.AddControllers(configure =>
         {
             configure.ReturnHttpNotAcceptable = true;
+            configure.CacheProfiles.Add("240SecondsCacheProfile", new() { Duration = 240 });
         })
         .AddNewtonsoftJson(setupAction =>
         {

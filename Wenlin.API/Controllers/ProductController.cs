@@ -12,6 +12,7 @@ using Wenlin.Application.Features.Products.Queries.GetProductsList;
 namespace Wenlin.API.Controllers;
 
 [Route("api/categories/{categoryId}/products")]
+[ResponseCache(CacheProfileName = "240SecondsCacheProfile")]
 public class ProductController : BaseController
 {
     public ProductController(IMediator mediator): base(mediator) { }

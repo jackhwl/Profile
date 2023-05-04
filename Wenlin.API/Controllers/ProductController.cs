@@ -12,7 +12,7 @@ using Wenlin.Application.Features.Products.Queries.GetProductsList;
 namespace Wenlin.API.Controllers;
 
 [Route("api/categories/{categoryId}/products")]
-[ResponseCache(CacheProfileName = "240SecondsCacheProfile")]
+//[ResponseCache(CacheProfileName = "240SecondsCacheProfile")]
 public class ProductController : BaseController
 {
     public ProductController(IMediator mediator): base(mediator) { }
@@ -33,7 +33,7 @@ public class ProductController : BaseController
 
     [HttpGet]
     [HttpHead]
-    [ResponseCache(Duration = 120)]
+    //[ResponseCache(Duration = 120)]
     public async Task<ActionResult<List<ProductListVm>>> GetProducts(Guid categoryId)
     {
         var request = new GetProductsListQuery() { CategoryId = categoryId };

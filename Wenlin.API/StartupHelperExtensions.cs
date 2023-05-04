@@ -142,7 +142,17 @@ internal static class StartupHelperExtensions
 
         builder.Services.AddResponseCaching();
 
-        builder.Services.AddHttpCacheHeaders();
+        builder.Services.AddHttpCacheHeaders(
+            expirationModelOptions =>
+            {
+                expirationModelOptions.MaxAge = 60;
+                expirationModelOptions.CacheLocation = Marvin.Cache.Headers.CacheLocation.Private;
+            },
+            validationModelOptions =>
+            {
+                validationModelOptions.MustRevalidate = true;
+            }
+        );
 
         return builder.Build();
     }

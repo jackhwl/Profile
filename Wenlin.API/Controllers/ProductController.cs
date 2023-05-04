@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Marvin.Cache.Headers;
+using MediatR;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Wenlin.Application.Features.Products.Commands.CreateProduct;
@@ -13,6 +14,8 @@ namespace Wenlin.API.Controllers;
 
 [Route("api/categories/{categoryId}/products")]
 //[ResponseCache(CacheProfileName = "240SecondsCacheProfile")]
+[HttpCacheExpiration(CacheLocation = CacheLocation.Public)]
+[HttpCacheValidation(MustRevalidate = true)]
 public class ProductController : BaseController
 {
     public ProductController(IMediator mediator): base(mediator) { }
@@ -34,6 +37,8 @@ public class ProductController : BaseController
     [HttpGet]
     [HttpHead]
     //[ResponseCache(Duration = 120)]
+    [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 1000)]
+    [HttpCacheValidation(MustRevalidate = false)]
     public async Task<ActionResult<List<ProductListVm>>> GetProducts(Guid categoryId)
     {
         var request = new GetProductsListQuery() { CategoryId = categoryId };
